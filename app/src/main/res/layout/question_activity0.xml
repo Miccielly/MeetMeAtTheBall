@@ -52,6 +52,8 @@
         android:layout_marginEnd="130dp"
         android:layout_marginBottom="50dp"
         android:text="Next"
+        app:backgroundTint="@color/green"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent" />

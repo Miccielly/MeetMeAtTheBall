@@ -31,8 +31,6 @@ class QuestionActivity : AppCompatActivity() {
         initCharacters()
 
         imageView.setBackgroundColor(Color.CYAN)
-        //Drawable.createFromPath("@drawable/tc")
-//        val drawable: Drawable? = ResourcesCompat.getDrawable(resources, characters[characterIndex].characterImage, null)
 
         imageView.background = characters[characterIndex].characterImage
         //PŘIDÁNÍ LISTENERŮ
