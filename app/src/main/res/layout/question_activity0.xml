@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/question_activity0"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/yellow"
+    tools:context=".QuestionActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bubble"
+        android:gravity="center_vertical"
+        android:lineSpacingMultiplier="1.5"
+        android:outlineProvider="paddedBounds"
+        android:paddingStart="45dp"
+        android:paddingEnd="80dp"
+        android:scaleX="1"
+        android:text="QUESTIONQUESTIONQUESTIONQUESTIONQUESTIONQUESTIONQUESTIONQUESTIONQUESTION"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="#33691E"
+        app:barrierMargin="@dimen/fab_margin"
+        app:layout_constraintBottom_toTopOf="@+id/nextBtn"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="250dp"
+        android:layout_height="400dp"
+        android:background="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pauseMenuBtn" />
+
+    <Button
+        android:id="@+id/nextBtn"
+        android:layout_width="171dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginEnd="130dp"
+        android:layout_marginBottom="50dp"
+        android:text="Next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/pauseMenuBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pause"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
