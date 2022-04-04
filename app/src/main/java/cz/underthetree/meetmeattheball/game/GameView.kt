@@ -6,6 +6,7 @@ import android.hardware.SensorManager
 import android.util.Log
 import android.view.SurfaceView
 import cz.underthetree.meetmeattheball.R
+import cz.underthetree.meetmeattheball.utils.Accelerometer
 
 class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(context), Runnable {
 
@@ -23,6 +24,11 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
     private var obj2: GameObject //objekt s kterým se pohybuje
 
 
+    //Controls
+    private lateinit var accelerometer: Accelerometer
+    var ax = 0f
+    var ay = 0f
+
     init
     {
         paint = Paint()
@@ -33,9 +39,22 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         bg1 = Background(sizeX, sizeY, resources)
 
         obj = GameObject(Point(0,0), Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f)
+
+        obj.transform.x = 500*screenRatioX.toInt()
+        obj.transform.y = 400*screenRatioY.toInt()
+
         obj2 = GameObject(Point(0,0), Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f)
         obj2.transform.x = 50*screenRatioX.toInt()
         obj2.transform.y = 600*screenRatioY.toInt()
+
+        //AKCELEROMETR CODE
+        accelerometer = Accelerometer(context)
+
+        // create a listener for accelerometer
+        accelerometer.setListener { tx, ty, tz ->
+            ax = tx
+            ay = ty
+        }
 
     }
 
@@ -54,6 +73,8 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         isPlaying = true
         thread = Thread(this)
         thread.start()
+
+        accelerometer.register()
     }
 
     fun pause()
@@ -61,6 +82,8 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         isPlaying = false
         //pravděpodobně tady ani join nemá být?
         thread.join()   //v javě tohle bylo obalené try catchem
+
+        accelerometer.unregister()
     }
 
     fun draw()
@@ -68,9 +91,21 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         if(holder.surface.isValid())
         {
             val canvas: Canvas = holder.lockCanvas()
-            canvas.drawColor(Color.BLUE)   //clearing screen
+
+            if(ax > 1)
+                canvas.drawColor(Color.BLUE)   //clearing screen
+            else if (ax < -1)
+                canvas.drawColor(Color.GREEN)   //clearing screen
+            else if(ay > 1)
+                canvas.drawColor(Color.CYAN)   //clearing screen
+            else if (ay < -1)
+                canvas.drawColor(Color.MAGENTA)   //clearing screen
+            else
+                canvas.drawColor(Color.RED)
+
+
             canvas.drawBitmap(bg1.background, bg1.x.toFloat(), bg1.y.toFloat(), paint)
-            canvas.drawBitmap(obj.bitmap, obj.transform.x.toFloat(),0f, paint)
+            canvas.drawBitmap(obj.bitmap, obj.transform.x.toFloat(),obj.transform.y.toFloat(), paint)
             canvas.drawBitmap(obj2.bitmap, obj2.transform.x.toFloat(),obj2.transform.y.toFloat(), paint)
             holder.unlockCanvasAndPost(canvas)
         }
@@ -78,7 +113,6 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
     fun update()
     {
-//        sensorManager.get
         movement()
     }
 
@@ -88,6 +122,26 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
     }
 
     fun movement() {
-        obj.transform.x += 1 * screenRatioX.toInt()   //pohyb objektem do leva
+
+
+        if(ax > 1f)
+            ax = 1f
+        else if (ax < -1f)
+            ax = -1f
+
+        if(ay > 1f)
+            ay = 1f
+        else if (ay < -1f)
+            ay = -1f
+
+        Log.i( "X", ax.toString())
+        Log.i( "Z", ay.toString())
+
+        obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
+        obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
+
     }
+
+
+
 }

@@ -15,10 +15,13 @@
         android:theme="@style/Theme.MeetMeAtTheBall">
         <activity
             android:name=".WalkingActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="landscape"/>
+
         <activity
             android:name=".QuestionActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="landscape">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -29,7 +32,8 @@
         </activity>
         <activity
             android:name=".MainMenuActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -15,8 +15,7 @@ class WalkingActivity : AppCompatActivity() {
 
         val point:Point = Point()
         windowManager.defaultDisplay.getSize(point)
-        Log.i( "pointX", point.x.toString())
-        Log.i( "pointY", point.y.toString())
+
 
         gameView = GameView(this, point.x, point.y)
 
