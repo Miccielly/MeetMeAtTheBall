@@ -31,10 +31,11 @@
         app:layout_constraintTop_toBottomOf="@+id/playBtn" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/gyroText"
         android:layout_width="200dp"
         android:layout_height="50dp"
+        android:layout_marginEnd="26dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="185dp"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:layout_editor_absoluteY="196dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
