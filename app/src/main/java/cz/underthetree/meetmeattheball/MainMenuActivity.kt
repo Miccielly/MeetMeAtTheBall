@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import cz.underthetree.meetmeattheball.utils.Accelerometer
 import cz.underthetree.meetmeattheball.utils.Gyroscope
 
 
 class MainMenuActivity: AppCompatActivity() {
 
     private lateinit var gyroscope: Gyroscope
+    private lateinit var accelerometer: Accelerometer
+
     private lateinit var textView: TextView
 
 
@@ -32,10 +35,11 @@ class MainMenuActivity: AppCompatActivity() {
         }
 
 
-        //GYROSCOPE CODE
-        gyroscope = Gyroscope(this)
+        //TEST MOVEMENT TEXT
         textView = findViewById(R.id.gyroText)
 
+        //GYROSCOPE CODE
+        gyroscope = Gyroscope(this)
 
         gyroscope.setListener { rx, ry, rz ->
             // on rotation method of gyroscope
@@ -48,6 +52,21 @@ class MainMenuActivity: AppCompatActivity() {
                 window.decorView.setBackgroundColor(Color.YELLOW)
             }
         }
+
+        //AKCELEROMETR CODE
+        accelerometer = Accelerometer(this)
+
+        // create a listener for accelerometer
+        accelerometer.setListener { tx, ty, ts ->
+            //on translation method of accelerometer
+            // set the color red if the device moves in positive x axis
+            if (tx > 1.0f) {
+                window.decorView.setBackgroundColor(Color.RED)
+            } else if (tx < -1.0f) {
+                window.decorView.setBackgroundColor(Color.BLUE)
+            }
+        }
+
     }
 
     private fun play()
@@ -66,11 +85,13 @@ class MainMenuActivity: AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         gyroscope.register()
+        accelerometer.register()
     }
 
     override fun onPause() {
         super.onPause()
         gyroscope.unregister()
+        accelerometer.unregister()
     }
 
 }

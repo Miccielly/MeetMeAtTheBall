@@ -7,12 +7,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 //kód z https://www.geeksforgeeks.org/how-to-build-an-application-to-test-motion-sensors-in-android/
-public class Gyroscope {
+public class Accelerometer {
     // create an interface with one method
     public interface Listener {
         // create method with all 3
         // axis translation as argument
-        void onRotation(float tx, float ty, float ts);
+        void onTranslation(float tx, float ty, float ts);
     }
 
     // create an instance
@@ -27,26 +27,27 @@ public class Gyroscope {
     private Sensor sensor;
     private SensorEventListener sensorEventListener;
 
-    // create constructor with context as argument
-    public Gyroscope(Context context) {
-
+    // create constructor with
+    // context as argument
+    public Accelerometer(Context context) {
         // create instance of sensor manager
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
-        // create instance of sensor with type gyroscope
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        // create instance of sensor
+        // with type linear acceleration
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         // create the sensor listener
         sensorEventListener = new SensorEventListener() {
-
-            // this method is called when
-            // the device's position changes
+            // this method is called when the
+            // device's position changes
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
-                // check if listener is different from null
+                // check if listener is
+                // different from null
                 if (listener != null) {
-                    // pass the three floats in listener on rotation of axis
-                    listener.onRotation(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
+                    // pass the three floats in listener on translation of axis
+                    listener.onTranslation(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
                 }
             }
 
@@ -60,7 +61,8 @@ public class Gyroscope {
     // create register method
     // for sensor notifications
     public void register() {
-        // call sensor manger's register listener and pass the required arguments
+        // call sensor manger's register listener
+        // and pass the required arguments
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
