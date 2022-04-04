@@ -28,7 +28,7 @@ class MainMenuActivity: AppCompatActivity() {
     private fun play()
     {
         //val switchActivityIntent = Intent(this, QuestionActivity::class.java)
-        val switchActivityIntent = Intent(this, QuestionActivity::class.java)
+        val switchActivityIntent = Intent(this, WalkingActivity::class.java)
         startActivity(switchActivityIntent)
     }
 
@@ -37,4 +37,7 @@ class MainMenuActivity: AppCompatActivity() {
         finish()
         System.exit(0)
     }
+
+    //GYROSCOPE CODE
+
 }
