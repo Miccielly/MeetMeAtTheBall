@@ -26,8 +26,10 @@ class GameObject (var size:Point, val res:Resources, val drawable:Int, val sizeR
         canvas.drawBitmap(bitmap, transform.x.toFloat(), transform.y.toFloat(), paint)
     }
 
-    public fun checkColision()
+    public fun  checkColision(obj: GameObject)
     {
-
+        var col = false
+        if(obj.transform.x + obj.size.x > 0)
+            col = true
     }
 }

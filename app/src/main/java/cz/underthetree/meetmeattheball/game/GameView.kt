@@ -21,7 +21,7 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
     private val bg1: Background //pouze obrázek co stojí
     private var obj: GameObject //objekt s kterým se pohybuje
-    //private var obj2: GameObject //objekt s kterým se pohybuje
+    private var obj2: GameObject //objekt s kterým se pohybuje
 
 
     //Controls
@@ -43,9 +43,9 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         //obj.transform.x = 500*screenRatioX.toInt()
         //obj.transform.y = 400*screenRatioY.toInt()
 
-        //obj2 = GameObject(Point(0,0), Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f)
-        //obj2.transform.x = 50*screenRatioX.toInt()
-        //obj2.transform.y = 600*screenRatioY.toInt()
+        obj2 = GameObject(Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f ,paint)
+        obj2.transform.x = 50*screenRatioX.toInt()
+        obj2.transform.y = 600*screenRatioY.toInt()
 
         //AKCELEROMETR CODE
         accelerometer = Accelerometer(context)
@@ -140,8 +140,11 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
 
 
-        obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
-        obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
+//        obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
+//        obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
+
+        obj.transform.x += ax.toInt() * 5  //pohyb objektem do leva
+        obj.transform.y += ay.toInt() * 5 //pohyb objektem do leva
 //        obj.transform.x += 1   //pohyb objektem do leva
 
     }
