@@ -1,10 +1,8 @@
 package cz.underthetree.meetmeattheball
 
 import android.graphics.Point
-import android.hardware.display.DisplayManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import cz.underthetree.meetmeattheball.game.GameView
 
 class WalkingActivity : AppCompatActivity() {
@@ -13,11 +11,12 @@ class WalkingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val point:Point = Point()
-        windowManager.defaultDisplay.getSize(point)
+        val displaySize:Point = Point()
+        //TODO na mobilu to nevezme asi správnou size a je to 0 0 tím pádem při násobení pozice objektů se nepohne (násobení 0)
+        windowManager.defaultDisplay.getSize(displaySize)
 
 
-        gameView = GameView(this, point.x, point.y)
+        gameView = GameView(this, displaySize.x, displaySize.y)
 
         setContentView(gameView)
     }

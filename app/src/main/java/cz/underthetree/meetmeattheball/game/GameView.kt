@@ -21,39 +21,40 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
     private val bg1: Background //pouze obrázek co stojí
     private var obj: GameObject //objekt s kterým se pohybuje
-    private var obj2: GameObject //objekt s kterým se pohybuje
+    //private var obj2: GameObject //objekt s kterým se pohybuje
 
 
     //Controls
     private lateinit var accelerometer: Accelerometer
-    var ax = 0f
-    var ay = 0f
+    private var ax = 0f
+    private var ay = 0f
 
     init
     {
         paint = Paint()
 
-        Log.i("ratioX", screenRatioX.toString())
-        Log.i("ratioY", screenRatioY.toString())
+        //Log.i("ratioX", screenRatioX.toString())
+        //Log.i("ratioY", screenRatioY.toString())
 
         bg1 = Background(sizeX, sizeY, resources)
 
-        obj = GameObject(Point(0,0), Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f)
+        obj = GameObject(Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f, paint)
 
-        obj.transform.x = 500*screenRatioX.toInt()
-        obj.transform.y = 400*screenRatioY.toInt()
+        //obj.transform.x = 500*screenRatioX.toInt()
+        //obj.transform.y = 400*screenRatioY.toInt()
 
-        obj2 = GameObject(Point(0,0), Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f)
-        obj2.transform.x = 50*screenRatioX.toInt()
-        obj2.transform.y = 600*screenRatioY.toInt()
+        //obj2 = GameObject(Point(0,0), Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f)
+        //obj2.transform.x = 50*screenRatioX.toInt()
+        //obj2.transform.y = 600*screenRatioY.toInt()
 
         //AKCELEROMETR CODE
         accelerometer = Accelerometer(context)
 
         // create a listener for accelerometer
         accelerometer.setListener { tx, ty, tz ->
-            ax = tx
-            ay = ty
+            //landscape mód osy přehozené tedy
+            ay = tx
+            ax = ty
         }
 
     }
@@ -88,6 +89,7 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
     fun draw()
     {
+        //je možné že to nepustí přes tento if
         if(holder.surface.isValid())
         {
             val canvas: Canvas = holder.lockCanvas()
@@ -105,8 +107,8 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
 
             canvas.drawBitmap(bg1.background, bg1.x.toFloat(), bg1.y.toFloat(), paint)
-            canvas.drawBitmap(obj.bitmap, obj.transform.x.toFloat(),obj.transform.y.toFloat(), paint)
-            canvas.drawBitmap(obj2.bitmap, obj2.transform.x.toFloat(),obj2.transform.y.toFloat(), paint)
+            obj.draw(canvas)
+            //canvas.drawBitmap(obj2.bitmap, obj2.transform.x.toFloat(),obj2.transform.y.toFloat(), paint)
             holder.unlockCanvasAndPost(canvas)
         }
     }
@@ -123,6 +125,8 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
     fun movement() {
 
+        Log.i( "X", ax.toString())
+        Log.i( "Z", ay.toString())
 
         if(ax > 1f)
             ax = 1f
@@ -134,11 +138,11 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         else if (ay < -1f)
             ay = -1f
 
-        Log.i( "X", ax.toString())
-        Log.i( "Z", ay.toString())
+
 
         obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
         obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
+//        obj.transform.x += 1   //pohyb objektem do leva
 
     }
 

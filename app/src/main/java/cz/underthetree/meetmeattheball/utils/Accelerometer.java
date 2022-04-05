@@ -35,7 +35,7 @@ public class Accelerometer {
 
         // create instance of sensor
         // with type linear acceleration
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // create the sensor listener
         sensorEventListener = new SensorEventListener() {
