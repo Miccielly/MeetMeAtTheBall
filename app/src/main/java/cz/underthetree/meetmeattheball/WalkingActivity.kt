@@ -1,9 +1,12 @@
 package cz.underthetree.meetmeattheball
 
 import android.graphics.Point
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import cz.underthetree.meetmeattheball.game.GameView
+
 
 class WalkingActivity : AppCompatActivity() {
 
@@ -11,11 +14,20 @@ class WalkingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val displaySize:Point = Point()
+        //val displaySize:Point = Point()
 //        val displaySize:Point = Point(2280, 1080) //Xiaomi Mi A2 lite
         //TODO na mobilu to nevezme asi správnou size a je to 0 0 tím pádem při násobení pozice objektů se nepohne (násobení 0)
-        windowManager.defaultDisplay.getSize(displaySize)
+        //windowManager.defaultDisplay.getSize(displaySize)
 
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val height = displayMetrics.heightPixels
+        val width = displayMetrics.widthPixels
+
+        val displaySize = Point(width,height)
+
+        Log.i("height", height.toString())
+        Log.i("width", width.toString())
 
         gameView = GameView(this, displaySize.x, displaySize.y)
 

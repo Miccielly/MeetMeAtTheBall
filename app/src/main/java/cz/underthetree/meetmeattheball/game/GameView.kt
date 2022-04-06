@@ -8,7 +8,7 @@ import android.view.SurfaceView
 import cz.underthetree.meetmeattheball.R
 import cz.underthetree.meetmeattheball.utils.Accelerometer
 
-class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(context), Runnable {
+class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : SurfaceView(context), Runnable {
 
     private lateinit var sensorManager:SensorManager
     private lateinit var thread:Thread
@@ -16,8 +16,8 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 
     private val paint: Paint
 
-    private val screenRatioX:Float = 1920f/sizeX
-    private val screenRatioY:Float = 1080f/sizeY
+    private val screenRatioX:Float = 1920f/windowSizeX
+    private val screenRatioY:Float = 1080f/windowSizeY
 
     private val bg1: Background //pouze obrázek co stojí
     private var obj: GameObject //objekt s kterým se pohybuje
@@ -36,16 +36,17 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
         //Log.i("ratioX", screenRatioX.toString())
         //Log.i("ratioY", screenRatioY.toString())
 
-        bg1 = Background(sizeX, sizeY, resources)
+        bg1 = Background(windowSizeX, windowSizeY, resources)
 
-        obj = GameObject(Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f, paint)
+        obj = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .1f, paint)
 
         //obj.transform.x = 500*screenRatioX.toInt()
         //obj.transform.y = 400*screenRatioY.toInt()
 
-        obj2 = GameObject(Point(sizeX,sizeY), resources, R.drawable.sadbg, .1f ,paint)
+        obj2 = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
         obj2.transform.x = 50*screenRatioX.toInt()
         obj2.transform.y = 600*screenRatioY.toInt()
+
 
         //AKCELEROMETR CODE
         accelerometer = Accelerometer(context)
@@ -55,6 +56,9 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
             //landscape mód osy přehozené tedy
             ay = tx
             ax = ty
+
+            Log.i("ay",ay.toString())
+            Log.i("ax",ax.toString())
         }
 
     }
@@ -90,23 +94,17 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
     fun draw()
     {
         //je možné že to nepustí přes tento if
-        if(holder.surface.isValid())
-        {
+        if(holder.surface.isValid()) {
             val canvas: Canvas = holder.lockCanvas()
 
-            if(ax > 1)
-                canvas.drawColor(Color.BLUE)   //clearing screen
-            else if (ax < -1)
-                canvas.drawColor(Color.GREEN)   //clearing screen
-            else if(ay > 1)
-                canvas.drawColor(Color.CYAN)   //clearing screen
-            else if (ay < -1)
-                canvas.drawColor(Color.MAGENTA)   //clearing screen
+            if (obj.checkColision(obj2))
+                canvas.drawColor(Color.RED)   //clearing screen
             else
-                canvas.drawColor(Color.RED)
+                canvas.drawColor(Color.BLUE)   //clearing screen
 
 
             canvas.drawBitmap(bg1.background, bg1.x.toFloat(), bg1.y.toFloat(), paint)
+            obj2.draw(canvas)
             obj.draw(canvas)
             //canvas.drawBitmap(obj2.bitmap, obj2.transform.x.toFloat(),obj2.transform.y.toFloat(), paint)
             holder.unlockCanvasAndPost(canvas)
@@ -143,8 +141,10 @@ class GameView(context: Context?, val sizeX:Int, val sizeY:Int) : SurfaceView(co
 //        obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
 //        obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
 
-        obj.transform.x += ax.toInt() * 5  //pohyb objektem do leva
-        obj.transform.y += ay.toInt() * 5 //pohyb objektem do leva
+        Log.i("screenRatioX", screenRatioX.toString())
+        Log.i("screenRatioY", screenRatioY.toString())
+        obj.transform.x += ax.toInt()+2 *  screenRatioX.toInt()
+        obj.transform.y += ay.toInt()+2 *  screenRatioY.toInt() //pohyb objektem do leva
 //        obj.transform.x += 1   //pohyb objektem do leva
 
     }
