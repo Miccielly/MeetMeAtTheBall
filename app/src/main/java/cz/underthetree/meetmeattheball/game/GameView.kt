@@ -44,8 +44,8 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
         //obj.transform.y = 400*screenRatioY.toInt()
 
         obj2 = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
-        obj2.transform.x = 50*screenRatioX.toInt()
-        obj2.transform.y = 600*screenRatioY.toInt()
+        obj2.transform.x = 50*screenRatioX
+        obj2.transform.y = 50*screenRatioY
 
 
         //AKCELEROMETR CODE
@@ -143,8 +143,8 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
 
         Log.i("screenRatioX", screenRatioX.toString())
         Log.i("screenRatioY", screenRatioY.toString())
-        obj.transform.x += ax.toInt()+2 *  screenRatioX.toInt()
-        obj.transform.y += ay.toInt()+2 *  screenRatioY.toInt() //pohyb objektem do leva
+        obj.transform.x += ax.toInt() *  screenRatioX
+        obj.transform.y += ay.toInt() *  screenRatioY //pohyb objektem do leva
 //        obj.transform.x += 1   //pohyb objektem do leva
 
     }
