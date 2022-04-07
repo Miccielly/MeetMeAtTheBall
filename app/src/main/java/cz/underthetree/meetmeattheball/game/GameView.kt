@@ -16,8 +16,8 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
 
     private val paint: Paint
 
-    private val screenRatioX:Float = 1920f/windowSizeX
-    private val screenRatioY:Float = 1080f/windowSizeY
+    private val screenRatioX:Float = windowSizeX/1920f
+    private val screenRatioY:Float = windowSizeY/1080f
 
     private val bg1: Background //pouze obrázek co stojí
     private var obj: GameObject //objekt s kterým se pohybuje
@@ -44,8 +44,9 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
         //obj.transform.y = 400*screenRatioY.toInt()
 
         obj2 = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
-        obj2.transform.x = 50*screenRatioX
-        obj2.transform.y = 50*screenRatioY
+        obj2.setPosition(windowSizeX.toFloat(), windowSizeY.toFloat())
+
+
 
 
         //AKCELEROMETR CODE
@@ -106,7 +107,6 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
             canvas.drawBitmap(bg1.background, bg1.x.toFloat(), bg1.y.toFloat(), paint)
             obj2.draw(canvas)
             obj.draw(canvas)
-            //canvas.drawBitmap(obj2.bitmap, obj2.transform.x.toFloat(),obj2.transform.y.toFloat(), paint)
             holder.unlockCanvasAndPost(canvas)
         }
     }
@@ -143,9 +143,8 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
 
         Log.i("screenRatioX", screenRatioX.toString())
         Log.i("screenRatioY", screenRatioY.toString())
-        obj.transform.x += ax.toInt() *  screenRatioX
-        obj.transform.y += ay.toInt() *  screenRatioY //pohyb objektem do leva
-//        obj.transform.x += 1   //pohyb objektem do leva
+
+        obj.addPosition(ax *  screenRatioX, ay *  screenRatioY)
 
     }
 

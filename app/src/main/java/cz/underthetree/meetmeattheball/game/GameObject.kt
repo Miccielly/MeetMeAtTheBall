@@ -7,43 +7,61 @@ import cz.underthetree.meetmeattheball.utils.Vector2
 
 class GameObject (var windowSize:Point, val res:Resources, val drawable:Int, val sizeRelativeToScreen:Float, val paint: Paint){
 
-    //přidat point na pozici která bude ve středu obrázku (defaultně je to levý horní roh)
-    var bitmap:Bitmap
-    var transform:Vector2 = Vector2()
-    //var absoluteSize:Vector2 = Vector2()
-
-    var sizeX:Float
-    var sizeY:Float
+    var bitmap:Bitmap   //obrázek objektu
+    var transform:Vector2 = Vector2()   //pozice objektu
+    var origin:Vector2 = Vector2()   //pozice objektu
+    var scale:Vector2 = Vector2()   //velikost objektu
 
     init {
         bitmap = BitmapFactory.decodeResource(res, drawable)
-        sizeX = windowSize.x*sizeRelativeToScreen
-        sizeY = windowSize.y*sizeRelativeToScreen
-        bitmap = Bitmap.createScaledBitmap(bitmap, sizeX.toInt(), sizeY.toInt(), false)
+        scale.x = windowSize.x*sizeRelativeToScreen
+        scale.y = windowSize.y*sizeRelativeToScreen
+        bitmap = Bitmap.createScaledBitmap(bitmap, scale.x.toInt(), scale.y.toInt(), false)
 
-        Log.i("absSizeX:", sizeX.toString())
-        Log.i("absSizeY:", sizeY.toString())
 
+
+
+        setPosition(0f,0f)
     }
 
-    public fun setPosition()
+    fun setPosition(x:Float, y:Float)
     {
+        transform.x = x
+        transform.y = y
+
+        //přepočet pozice na střed objektu
+        origin.x = transform.x + (scale.x/2)
+        origin.y = transform.y + (scale.y/2)
 
 
+        if(x > 0)
+        Log.i("transformX:", transform.x.toString())
+        Log.i("transformY:", transform.y.toString())
+
+        Log.i("originX:", origin.x.toString())
+        Log.i("originY:", origin.y.toString())
     }
 
-    public fun draw(canvas: Canvas)
+    fun addPosition(x:Float, y:Float)
     {
-        canvas.drawBitmap(bitmap, transform.x.toFloat(), transform.y.toFloat(), paint)
+        //přepočet pozice na střed objektu
+        transform.x += x
+        transform.y += y
+
+        //přepočet pozice na střed objektu
+        origin.x = transform.x + (scale.x/2)
+        origin.y = transform.y + (scale.y/2)
     }
 
-    public fun  checkColision(obj: GameObject):Boolean
+
+    fun draw(canvas: Canvas)
+    {
+        canvas.drawBitmap(bitmap, transform.x - (scale.x/2), transform.y - (scale.y/2), paint)
+    }
+
+    fun  checkColision(obj: GameObject):Boolean
     {
         val d = transform.dist(obj.transform)
-//        val d = Math.sqrt(
-//            Math.pow(transform.x.toDouble() - +obj.transform.x, 2.0)
-//                    + Math.pow(transform.y.toDouble() - obj.transform.y, 2.0)
-//        )
 
         Log.i("collision", (d).toString() )
 

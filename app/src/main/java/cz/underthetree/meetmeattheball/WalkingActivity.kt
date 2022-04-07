@@ -29,6 +29,8 @@ class WalkingActivity : AppCompatActivity() {
         Log.i("height", height.toString())
         Log.i("width", width.toString())
 
+
+
         gameView = GameView(this, displaySize.x, displaySize.y)
 
         setContentView(gameView)
