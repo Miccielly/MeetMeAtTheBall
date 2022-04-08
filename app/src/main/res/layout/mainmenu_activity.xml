@@ -11,10 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="123dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="50dp"
         android:text="Play"
-        app:layout_constraintBottom_toTopOf="@+id/quitBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,13 +20,11 @@
         android:id="@+id/quitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="182dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="10dp"
         android:text="Quit"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/questionBtn" />
 
     <TextView
         android:id="@+id/gyroText"
@@ -38,4 +34,14 @@
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         tools:layout_editor_absoluteY="196dp" />
+
+    <Button
+        android:id="@+id/questionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:text="Question"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

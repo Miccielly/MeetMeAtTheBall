@@ -1,14 +1,18 @@
 package cz.underthetree.meetmeattheball.game
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
 import android.hardware.SensorManager
 import android.util.Log
 import android.view.SurfaceView
+import cz.underthetree.meetmeattheball.MainMenuActivity
+import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
+import cz.underthetree.meetmeattheball.WalkingActivity
 import cz.underthetree.meetmeattheball.utils.Accelerometer
 
-class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : SurfaceView(context), Runnable {
+class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX:Int, val windowSizeY:Int) : SurfaceView(context), Runnable {
 
     private lateinit var sensorManager:SensorManager
     private lateinit var thread:Thread
@@ -16,6 +20,7 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
 
     private val paint: Paint
 
+    //TODO ačkoliv násobíme tímto, vypadá to že pohyb objektů není nezávislý na rozlišení obrazovky (možná je to frameratem?)
     private val screenRatioX:Float = windowSizeX/1920f
     private val screenRatioY:Float = windowSizeY/1080f
 
@@ -40,14 +45,12 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
 
         obj = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .1f, paint)
 
-        //obj.transform.x = 500*screenRatioX.toInt()
-        //obj.transform.y = 400*screenRatioY.toInt()
 
         obj2 = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
-        obj2.setPosition(windowSizeX.toFloat(), windowSizeY.toFloat())
 
-
-
+        //SET POSITIONS
+        obj.setPosition(500*screenRatioX,200*screenRatioY)
+        obj2.setPosition(500*screenRatioX, 500*screenRatioY)
 
         //AKCELEROMETR CODE
         accelerometer = Accelerometer(context)
@@ -61,7 +64,6 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
             Log.i("ay",ay.toString())
             Log.i("ax",ax.toString())
         }
-
     }
 
     override fun run() {
@@ -98,8 +100,10 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
         if(holder.surface.isValid()) {
             val canvas: Canvas = holder.lockCanvas()
 
-            if (obj.checkColision(obj2))
+            if(collisions()) {
                 canvas.drawColor(Color.RED)   //clearing screen
+                showQuestion()
+            }
             else
                 canvas.drawColor(Color.BLUE)   //clearing screen
 
@@ -114,6 +118,7 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
     fun update()
     {
         movement()
+
     }
 
     fun sleep()
@@ -144,10 +149,22 @@ class GameView(context: Context?, val windowSizeX:Int, val windowSizeY:Int) : Su
         Log.i("screenRatioX", screenRatioX.toString())
         Log.i("screenRatioY", screenRatioY.toString())
 
+
         obj.addPosition(ax *  screenRatioX, ay *  screenRatioY)
 
     }
 
 
+    private fun collisions(): Boolean
+    {
+        return (obj.checkColision(obj2))
+    }
+
+    fun showQuestion() {
+        activity.startActivity(Intent(activity, QuestionActivity::class.java))
+        activity.finish()
+        Log.i("end", screenRatioY.toString())
+
+    }
 
 }

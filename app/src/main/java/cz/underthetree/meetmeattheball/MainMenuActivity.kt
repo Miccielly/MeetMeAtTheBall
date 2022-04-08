@@ -29,10 +29,16 @@ class MainMenuActivity: AppCompatActivity() {
             play()
         }
 
+        val questionBtn = findViewById(R.id.questionBtn) as Button
+        questionBtn.findViewById<Button>(R.id.questionBtn).setOnClickListener{
+            question()
+        }
+
         val quitBtn = findViewById(R.id.quitBtn) as Button
         quitBtn.findViewById<Button>(R.id.quitBtn).setOnClickListener {
             quit()
         }
+
 
 
         //TEST MOVEMENT TEXT
@@ -73,6 +79,12 @@ class MainMenuActivity: AppCompatActivity() {
     {
         //val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         val switchActivityIntent = Intent(this, WalkingActivity::class.java)
+        startActivity(switchActivityIntent)
+    }
+
+    private fun question()
+    {
+        val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         startActivity(switchActivityIntent)
     }
 

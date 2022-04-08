@@ -45,7 +45,7 @@ class QuestionActivity : AppCompatActivity() {
             backToMenu()
         }
 
-        textView.text = characters[characterIndex].name
+        textView.text = characters[characterIndex].questions[(0..characters[characterIndex].questions.size - 1).random()]
     }
 
     private fun newQuestion() {
@@ -83,7 +83,7 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun backToMenu() {
-        textView.text = "BackToMenu"
+//        textView.text = "BackToMenu"
         val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
         startActivity(switchActivityIntent)
     }
