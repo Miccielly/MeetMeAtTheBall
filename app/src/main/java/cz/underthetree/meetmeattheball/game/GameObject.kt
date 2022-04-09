@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.Log
 import cz.underthetree.meetmeattheball.utils.Vector2
 
+//TODO udělat variaci gameobjectu jen na sbírací věci, kde bude proměnná na uložení co načíst?(jen pokud bychom dělali i další třídy)
 class GameObject(
     var windowSize: Point,
     val res: Resources,
@@ -18,6 +19,7 @@ class GameObject(
     var origin: Vector2 = Vector2()   //pozice objektu
     var scale: Vector2 = Vector2()   //velikost objektu (od levé strany do pravé strany)
     var movement: Vector2 = Vector2()
+
     init {
         bitmap = BitmapFactory.decodeResource(res, drawable)
         scale.x =
@@ -35,16 +37,6 @@ class GameObject(
         //přepočet pozice na střed objektu
         origin.x = transform.x + (scale.x / 2)
         origin.y = transform.y + (scale.y / 2)
-
-/*
-        if(x > 0)
-        Log.i("transformX:", transform.x.toString())
-        Log.i("transformY:", transform.y.toString())
-
-        Log.i("originX:", origin.x.toString())
-        Log.i("originY:", origin.y.toString())
-
- */
     }
 
     fun addPosition(x: Float, y: Float) {
@@ -56,8 +48,8 @@ class GameObject(
         origin.x = transform.x + (scale.x / 2)
         origin.y = transform.y + (scale.y / 2)
 
-        Log.i("transformX:", transform.x.toString())
-        Log.i("transformY:", transform.y.toString())
+//        Log.i("transformX:", transform.x.toString())
+//        Log.i("transformY:", transform.y.toString())
     }
 
 
@@ -66,10 +58,7 @@ class GameObject(
     }
 
     fun checkColision(obj: GameObject): Boolean {
-//        val d = origin.dist(obj.origin) //vzdálenost mezi středy objektů
         val d = transform.dist(obj.transform) //vzdálenost mezi středy objektů
-
-        Log.i("collision", (d).toString())
 
         if (scale.x > obj.scale.x) {
             return d < scale.x / 2  // dělíme dvouma jelikož jde o rádius poloměru
@@ -77,7 +66,6 @@ class GameObject(
             return d < obj.scale.x / 2  // dělíme dvouma jelikož jde o rádius poloměru
 
     }
-
 
 
 }

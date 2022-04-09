@@ -58,8 +58,7 @@ class QuestionActivity : AppCompatActivity() {
         Log.i("nextBtnBefore", questionIndex.toString())
         Log.i("nextBtnBefore", textView.text.toString())
 
-        if (askedCount > 2)
-        {
+        if (askedCount > 2) {
             askedCount = 0
             var newCharacterIndex = 0
             do {
@@ -76,7 +75,8 @@ class QuestionActivity : AppCompatActivity() {
             this.finish()   //jako mohli bychom to nechat otevřené, ale přepínat pak mezi už otevřenými aktivitami zatím neumím
             return
         }
-        val questions = characters[characterIndex].questions    //výběr charakteru, z kterého vybíráme otázky
+        val questions =
+            characters[characterIndex].questions    //výběr charakteru, z kterého vybíráme otázky
         imageView.background = characters[characterIndex].characterImage
 
         //vybrání nového indexu
@@ -126,20 +126,23 @@ class QuestionActivity : AppCompatActivity() {
             Character(
                 questionsGeneral,
                 "Jan",
-                "Typical dude you see everywhere, nothing special nor extra. Still quite chill to chill with him."
-            , ResourcesCompat.getDrawable(resources, R.drawable.c_psycholog, null)),
+                "Typical dude you see everywhere, nothing special nor extra. Still quite chill to chill with him.",
+                ResourcesCompat.getDrawable(resources, R.drawable.c_psycholog, null)
+            ),
 
             Character(
                 questionsFood,
                 "Giovani",
-                "Would eat anything and post review of it on his instagram story."
-            , ResourcesCompat.getDrawable(resources, R.drawable.c_kuchar, null)),
+                "Would eat anything and post review of it on his instagram story.",
+                ResourcesCompat.getDrawable(resources, R.drawable.c_kuchar, null)
+            ),
 
             Character(
                 questionsTravel,
                 "Paul",
-                "His instagram looks like one man travel agency, he's on his way to another country you didn't even know exists."
-            , ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null))
+                "His instagram looks like one man travel agency, he's on his way to another country you didn't even know exists.",
+                ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null)
+            )
         )
     }
 }

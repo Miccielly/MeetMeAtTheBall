@@ -19,7 +19,7 @@ class WalkingActivity : AppCompatActivity() {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
-        val displaySize = Point(width,height)
+        val displaySize = Point(width, height)
 
         Log.i("height", height.toString())
         Log.i("width", width.toString())
