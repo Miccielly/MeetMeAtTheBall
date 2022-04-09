@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cz.underthetree.meetmeattheball.utils.Accelerometer
 import cz.underthetree.meetmeattheball.utils.Gyroscope
+import kotlin.system.exitProcess
 
 
 class MainMenuActivity: AppCompatActivity() {
@@ -80,18 +81,20 @@ class MainMenuActivity: AppCompatActivity() {
         //val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         val switchActivityIntent = Intent(this, WalkingActivity::class.java)
         startActivity(switchActivityIntent)
+        this.finish()
     }
 
     private fun question()
     {
         val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         startActivity(switchActivityIntent)
+        this.finish()
     }
 
     private fun quit()
     {
-        finish()
-        System.exit(0)
+        this.finish()
+        exitProcess(0)
     }
 
     override fun onResume() {

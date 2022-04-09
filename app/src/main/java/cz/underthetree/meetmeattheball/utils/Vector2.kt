@@ -17,4 +17,18 @@ class Vector2 (var x:Float, var y:Float)
 
         return d.toFloat()
     }
+
+    fun addValues(x:Float, y:Float) {
+        this.x += x
+        this.y += y
+    }
+
+    fun addValues(x:Float, y:Float, limit:Float)
+    {
+        //V absolutní hodnotě protože jdeme i do mínusu
+        if(Math.abs(this.x + x) < limit)
+            this.x += x
+        if(Math.abs(this.y + y) < limit)
+            this.y += y
+    }
 }

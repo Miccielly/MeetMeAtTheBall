@@ -14,14 +14,6 @@ class WalkingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-
-
-        //val displaySize:Point = Point()
-//        val displaySize:Point = Point(2280, 1080) //Xiaomi Mi A2 lite
-        //TODO na mobilu to nevezme asi správnou size a je to 0 0 tím pádem při násobení pozice objektů se nepohne (násobení 0)
-        //windowManager.defaultDisplay.getSize(displaySize)
-
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val height = displayMetrics.heightPixels

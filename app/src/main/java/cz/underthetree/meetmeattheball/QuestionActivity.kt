@@ -3,12 +3,12 @@ package cz.underthetree.meetmeattheball
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import cz.underthetree.meetmeattheball.game.Character
 
@@ -18,11 +18,17 @@ class QuestionActivity : AppCompatActivity() {
 
     private lateinit var imageView: ImageView
     private lateinit var characters: MutableList<Character>
-    private var characterIndex = 0; //výběr z listu charakterů
+    private var characterIndex = (0..2).random(); //výběr z listu charakterů
     private var askedCount = 0; //po třech otázkách konec tázací fáze
     private var questionIndex = 0;  //výběr otázky z listu otázek
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if (intent.extras != null) {
+            characterIndex = intent.extras!!.getInt("characterIndex")
+        }
+
+        //TODO nevytvářet vždy novou scénu jen změnit index charakteru na pozadí
         super.onCreate(savedInstanceState)
         setContentView(R.layout.question_activity0)
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -45,10 +51,13 @@ class QuestionActivity : AppCompatActivity() {
             backToMenu()
         }
 
-        textView.text = characters[characterIndex].questions[(0..characters[characterIndex].questions.size - 1).random()]
+        newQuestion()
     }
 
     private fun newQuestion() {
+        Log.i("nextBtnBefore", questionIndex.toString())
+        Log.i("nextBtnBefore", textView.text.toString())
+
         if (askedCount > 2)
         {
             askedCount = 0
@@ -63,7 +72,9 @@ class QuestionActivity : AppCompatActivity() {
 
             //zavolat WalkingActivity
 
-            //startActivity(Intent(this, WalkingActivity::class.java))
+            startActivity(Intent(this, WalkingActivity::class.java))
+            this.finish()   //jako mohli bychom to nechat otevřené, ale přepínat pak mezi už otevřenými aktivitami zatím neumím
+            return
         }
         val questions = characters[characterIndex].questions    //výběr charakteru, z kterého vybíráme otázky
         imageView.background = characters[characterIndex].characterImage
@@ -78,7 +89,8 @@ class QuestionActivity : AppCompatActivity() {
         questionIndex = newIndex;
 
         textView.text = questions[questionIndex]    //přiřazení strigu do textového pole
-
+        Log.i("nextBtnAfter", questionIndex.toString())
+        Log.i("nextBtnAfter", textView.text.toString())
         askedCount++
     }
 
@@ -86,6 +98,7 @@ class QuestionActivity : AppCompatActivity() {
 //        textView.text = "BackToMenu"
         val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
         startActivity(switchActivityIntent)
+        this.finish()
     }
 
 

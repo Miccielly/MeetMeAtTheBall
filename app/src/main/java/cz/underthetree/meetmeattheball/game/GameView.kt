@@ -6,7 +6,6 @@ import android.graphics.*
 import android.hardware.SensorManager
 import android.util.Log
 import android.view.SurfaceView
-import cz.underthetree.meetmeattheball.MainMenuActivity
 import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
 import cz.underthetree.meetmeattheball.WalkingActivity
@@ -25,7 +24,7 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
     private val screenRatioY:Float = windowSizeY/1080f
 
     private val bg1: Background //pouze obrázek co stojí
-    private var obj: GameObject //objekt s kterým se pohybuje
+    private var player: GameObject //objekt s kterým se pohybuje
     private var obj2: GameObject //objekt s kterým se pohybuje
 
 
@@ -33,6 +32,9 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
     private lateinit var accelerometer: Accelerometer
     private var ax = 0f
     private var ay = 0f
+
+    //Movement
+//    private var movement:Vector2 = Vector2()    //hodnota rychlosti kam jít
 
     init
     {
@@ -43,13 +45,13 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
 
         bg1 = Background(windowSizeX, windowSizeY, resources)
 
-        obj = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .1f, paint)
+        player = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .1f, paint)
 
 
         obj2 = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
 
         //SET POSITIONS
-        obj.setPosition(500*screenRatioX,200*screenRatioY)
+        player.setPosition(500*screenRatioX,200*screenRatioY)
         obj2.setPosition(500*screenRatioX, 500*screenRatioY)
 
         //AKCELEROMETR CODE
@@ -110,7 +112,7 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
 
             canvas.drawBitmap(bg1.background, bg1.x.toFloat(), bg1.y.toFloat(), paint)
             obj2.draw(canvas)
-            obj.draw(canvas)
+            player.draw(canvas)
             holder.unlockCanvasAndPost(canvas)
         }
     }
@@ -118,7 +120,7 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
     fun update()
     {
         movement()
-
+        borderCollision(player)
     }
 
     fun sleep()
@@ -141,7 +143,7 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
         else if (ay < -1f)
             ay = -1f
 
-
+        player.movement.addValues(ax,ay, 15f)
 
 //        obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
 //        obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
@@ -150,21 +152,30 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
         Log.i("screenRatioY", screenRatioY.toString())
 
 
-        obj.addPosition(ax *  screenRatioX, ay *  screenRatioY)
+        player.addPosition(player.movement.x *  screenRatioX, player.movement.y *  screenRatioY)
 
     }
 
 
     private fun collisions(): Boolean
     {
-        return (obj.checkColision(obj2))
+        return (player.checkColision(obj2))
+    }
+
+    private fun borderCollision(obj: GameObject)
+    {
+        if(obj.transform.x < 0 || obj.transform.x > windowSizeX)
+            obj.movement.x *= -1
+        if(obj.transform.y < 0 || obj.transform.y > windowSizeY)
+            obj.movement.y *= -1
     }
 
     fun showQuestion() {
-        activity.startActivity(Intent(activity, QuestionActivity::class.java))
-        activity.finish()
-        Log.i("end", screenRatioY.toString())
+        val i = Intent(activity, QuestionActivity::class.java)
+        i.putExtra("characterIndex", 2)
 
+        activity.startActivity(i)
+        activity.finish()
     }
 
 }
