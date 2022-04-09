@@ -31,4 +31,10 @@ class Vector2 (var x:Float, var y:Float)
         if(Math.abs(this.y + y) < limit)
             this.y += y
     }
+
+    fun setValues(x:Float, y:Float)
+    {
+        this.x = x
+        this.y = y
+    }
 }

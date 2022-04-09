@@ -82,6 +82,7 @@ class QuestionActivity : AppCompatActivity() {
         //vybrání nového indexu
         var newIndex = 0;
 
+        //TODO udělat seznam už použitých indexů, aby se neobjevila stejná otázka v jednom povídání (možná bude stačit mít hodně otázek a pak bude ta psta menší)
         //loop dokud se nenajde jiný index než co tam byl minule
         do {
             newIndex = (0..questions.size - 1).random()

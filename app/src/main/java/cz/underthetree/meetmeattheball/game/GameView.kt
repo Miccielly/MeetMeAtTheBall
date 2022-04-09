@@ -23,37 +23,19 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
     private val screenRatioX:Float = windowSizeX/1920f
     private val screenRatioY:Float = windowSizeY/1080f
 
-    private val bg1: Background //pouze obrázek co stojí
+    private val background: Background //pouze obrázek co stojí
     private var player: GameObject //objekt s kterým se pohybuje
-    private var obj2: GameObject //objekt s kterým se pohybuje
-
+    private var table: GameObject //objekt s kterým se pohybuje
 
     //Controls
     private lateinit var accelerometer: Accelerometer
     private var ax = 0f
     private var ay = 0f
 
-    //Movement
-//    private var movement:Vector2 = Vector2()    //hodnota rychlosti kam jít
-
+//    private lateinit var objectPlacer: ObjectPlacer
     init
     {
         paint = Paint()
-
-        //Log.i("ratioX", screenRatioX.toString())
-        //Log.i("ratioY", screenRatioY.toString())
-
-        bg1 = Background(windowSizeX, windowSizeY, resources)
-
-        player = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .1f, paint)
-
-
-        obj2 = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
-
-        //SET POSITIONS
-        player.setPosition(500*screenRatioX,200*screenRatioY)
-        obj2.setPosition(500*screenRatioX, 500*screenRatioY)
-
         //AKCELEROMETR CODE
         accelerometer = Accelerometer(context)
 
@@ -63,9 +45,24 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
             ay = tx
             ax = ty
 
-            Log.i("ay",ay.toString())
-            Log.i("ax",ax.toString())
+            //Log.i("ay",ay.toString())
+            //Log.i("ax",ax.toString())
         }
+
+        //Log.i("ratioX", screenRatioX.toString())
+        //Log.i("ratioY", screenRatioY.toString())
+
+        //Instantiate objects
+        background = Background(windowSizeX, windowSizeY, resources)
+        player = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .1f, paint)
+        table = GameObject(Point(windowSizeX,windowSizeY), resources, R.drawable.sadbg, .2f ,paint)
+
+        //SET POSITIONS
+        player.setPosition(500*screenRatioX,200*screenRatioY)
+        table.setPosition(500*screenRatioX, 500*screenRatioY)
+
+//        objectPlacer = ObjectPlacer(table , 3)
+
     }
 
     override fun run() {
@@ -110,9 +107,17 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
                 canvas.drawColor(Color.BLUE)   //clearing screen
 
 
-            canvas.drawBitmap(bg1.background, bg1.x.toFloat(), bg1.y.toFloat(), paint)
-            obj2.draw(canvas)
+            canvas.drawBitmap(background.background, background.x.toFloat(), background.y.toFloat(), paint)
+            table.draw(canvas)
+
+/*
+            objectPlacer.objects[0].draw(canvas)
+            objectPlacer.objects[1].draw(canvas)
+            objectPlacer.objects[2].draw(canvas)
+
+*/
             player.draw(canvas)
+            Log.i("playerPosY", player.transform.y.toString())
             holder.unlockCanvasAndPost(canvas)
         }
     }
@@ -130,9 +135,10 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
 
     fun movement() {
 
-        Log.i( "X", ax.toString())
-        Log.i( "Z", ay.toString())
+        Log.i( "aBeforeX", (ax).toString())
+        Log.i( "aBeforeY", (ay).toString())
 
+        //PŘEVEDENÍ NA 1 A -1
         if(ax > 1f)
             ax = 1f
         else if (ax < -1f)
@@ -143,31 +149,42 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
         else if (ay < -1f)
             ay = -1f
 
+        //POKUD SE NEHÝBE TAK ZPOMALUJE
+        if(ax < 1.5f && ax > -1.5f)
+        {
+            ax = (player.movement.x*-.03f)
+        }
+        if(ay < 1.5f && ay > -1.5f)
+        {
+            ay = (player.movement.y*-.03f)
+        }
+        Log.i( "aX", (ax).toString())
+        Log.i( "aY", (ay).toString())
+
         player.movement.addValues(ax,ay, 15f)
-
-//        obj.transform.x += ax.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
-//        obj.transform.y += ay.toInt() * screenRatioX.toInt()   //pohyb objektem do leva
-
-        Log.i("screenRatioX", screenRatioX.toString())
-        Log.i("screenRatioY", screenRatioY.toString())
+        Log.i( "movementX", (player.movement.x).toString())
+        Log.i( "movementY", (player.movement.y).toString())
 
 
         player.addPosition(player.movement.x *  screenRatioX, player.movement.y *  screenRatioY)
-
     }
 
 
     private fun collisions(): Boolean
     {
-        return (player.checkColision(obj2))
+        return (player.checkColision(table))
     }
 
     private fun borderCollision(obj: GameObject)
     {
-        if(obj.transform.x < 0 || obj.transform.x > windowSizeX)
+        if(obj.transform.x < 0 || obj.transform.x > windowSizeX) {
+            obj.setPosition(obj.transform.x + (obj.movement.x*-1), obj.transform.y)
             obj.movement.x *= -1
-        if(obj.transform.y < 0 || obj.transform.y > windowSizeY)
+        }
+        if(obj.transform.y < 0 || obj.transform.y > windowSizeY) {
+            obj.setPosition(obj.transform.x, obj.transform.y + (obj.movement.y*-1))
             obj.movement.y *= -1
+        }
     }
 
     fun showQuestion() {

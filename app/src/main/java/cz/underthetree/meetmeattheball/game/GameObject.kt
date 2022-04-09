@@ -55,6 +55,9 @@ class GameObject(
         //přepočet pozice na střed objektu
         origin.x = transform.x + (scale.x / 2)
         origin.y = transform.y + (scale.y / 2)
+
+        Log.i("transformX:", transform.x.toString())
+        Log.i("transformY:", transform.y.toString())
     }
 
 
