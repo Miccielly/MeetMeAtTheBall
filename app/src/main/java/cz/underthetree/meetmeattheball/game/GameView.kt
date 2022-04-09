@@ -72,7 +72,6 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
             draw()
             sleep()
         }
-
     }
 
     fun resume()
@@ -134,41 +133,27 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
     }
 
     fun movement() {
-
-        Log.i( "aBeforeX", (ax).toString())
-        Log.i( "aBeforeY", (ay).toString())
+        val tolerance = 1.5f
 
         //PŘEVEDENÍ NA 1 A -1
-        if(ax > 1f)
-            ax = 1f
-        else if (ax < -1f)
-            ax = -1f
+        if(ax > tolerance)
+            ax = tolerance
+        else if (ax < -tolerance)
+            ax = -tolerance
+        else
+            ax = (player.movement.x*-.03f)  //pokud se telefon nenaklání vůbec
 
-        if(ay > 1f)
-            ay = 1f
-        else if (ay < -1f)
-            ay = -1f
-
-        //POKUD SE NEHÝBE TAK ZPOMALUJE
-        if(ax < 1.5f && ax > -1.5f)
-        {
-            ax = (player.movement.x*-.03f)
-        }
-        if(ay < 1.5f && ay > -1.5f)
-        {
-            ay = (player.movement.y*-.03f)
-        }
-        Log.i( "aX", (ax).toString())
-        Log.i( "aY", (ay).toString())
+        if(ay > tolerance)
+            ay = tolerance
+        else if (ay < -tolerance)
+            ay = -tolerance
+        else
+            ay = (player.movement.y*-.03f)  //pokud se telefon nenaklání vůbec
 
         player.movement.addValues(ax,ay, 15f)
-        Log.i( "movementX", (player.movement.x).toString())
-        Log.i( "movementY", (player.movement.y).toString())
-
 
         player.addPosition(player.movement.x *  screenRatioX, player.movement.y *  screenRatioY)
     }
-
 
     private fun collisions(): Boolean
     {
@@ -194,5 +179,4 @@ class GameView(context: Context?, val activity: WalkingActivity, val windowSizeX
         activity.startActivity(i)
         activity.finish()
     }
-
 }
