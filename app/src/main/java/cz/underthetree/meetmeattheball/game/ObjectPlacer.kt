@@ -1,8 +1,6 @@
 package cz.underthetree.meetmeattheball.game
 
 import android.graphics.Canvas
-import android.util.Log
-import java.util.*
 
 //Vytváří objekty a pokládá je do prostoru
 class ObjectPlacer(val objectPrefab: GameObject, val objectCount: Int) {
@@ -41,11 +39,11 @@ class ObjectPlacer(val objectPrefab: GameObject, val objectCount: Int) {
 
         //přidání kopií prefabu (-2 protože první -1 je prefab a začínáme od nuly takže to je druhý -1)
         for (i in 0..objectCount - 2) {
-            objects.add(copyObject())
+            objects.add(duplicateObject())
         }
     }
 
-    private fun copyObject(): GameObject {
+    private fun duplicateObject(): GameObject {
         //vytvoří nový objekt se stejnými hodnotami jako prefabObject
         return GameObject(
             objectPrefab.windowSize,
