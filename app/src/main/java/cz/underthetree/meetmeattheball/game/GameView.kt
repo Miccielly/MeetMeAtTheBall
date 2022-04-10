@@ -38,7 +38,7 @@ class GameView(
     private var ax = 0f
     private var ay = 0f
 
-    private lateinit var objectManager: ObjectManager
+//    private lateinit var objectManager: ObjectManager
     private lateinit var obstacleManager: ObjectManager
 
     init {
@@ -66,7 +66,7 @@ class GameView(
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
         table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-        objectManager = ObjectManager(table, 3)
+//        objectManager = ObjectManager(table, 3)
         obstacleManager = ObjectManager(obstacle, 4)
 
     }
@@ -113,7 +113,7 @@ class GameView(
                 paint
             )
 
-            objectManager.drawObjects(canvas)
+//            objectManager.drawObjects(canvas)
             obstacleManager.drawObjects(canvas)
             player.draw(canvas)
 
@@ -158,10 +158,10 @@ class GameView(
     private fun collisions(): Boolean {
         var col = false
 
-        for (GameObject in objectManager.objects) {
-            if (player.checkColision(GameObject))
-                col = true
-        }
+//        for (GameObject in objectManager.objects) {
+//            if (player.checkColision(GameObject))
+//                col = true
+//        }
 
         return col
     }

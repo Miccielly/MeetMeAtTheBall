@@ -1,6 +1,7 @@
 package cz.underthetree.meetmeattheball.game
 
 import android.graphics.Canvas
+import android.util.Log
 
 //Vytváří objekty a pokládá je do prostoru
 class ObjectManager(val objectPrefab: GameObject, val objectCount: Int) {
@@ -21,17 +22,6 @@ class ObjectManager(val objectPrefab: GameObject, val objectCount: Int) {
                 (0..objectPrefab.windowSize.y).random().toFloat()
             )
         }
-
-/*
-        objects[0].setPosition((0..objectPrefab.windowSize.x).random().toFloat(), (0..objectPrefab.windowSize.y).random().toFloat())
-        objects[1].setPosition((0..objectPrefab.windowSize.x).random().toFloat(), (800f))
-        objects[1].setPosition(10f, (0..objectPrefab.windowSize.y).random().toFloat())
-
-        Log.i("objPos",objects[0].transform.x.toString())
-        Log.i("objPos",objects[1].transform.x.toString())
-        Log.i("objPos",objects[2].transform.x.toString())
-
- */
     }
 
     fun makeObjects() {
@@ -43,17 +33,6 @@ class ObjectManager(val objectPrefab: GameObject, val objectCount: Int) {
         }
     }
 
-    private fun duplicateObject(): GameObject {
-        //vytvoří nový objekt se stejnými hodnotami jako prefabObject
-        return GameObject(
-            objectPrefab.windowSize,
-            objectPrefab.res,
-            objectPrefab.drawable,
-            objectPrefab.sizeRelativeToScreen,
-            objectPrefab.paint
-        )
-    }
-
     fun drawObjects(canvas: Canvas) {
         for (GameObject in objects) {
             GameObject.draw(canvas)
@@ -62,9 +41,24 @@ class ObjectManager(val objectPrefab: GameObject, val objectCount: Int) {
 
     fun updateObjects()
     {
+        var i = 0
         for (GameObject in objects) {
             GameObject.update()
+            Log.i("objectIndex:", i++.toString())
         }
+    }
+
+    private fun duplicateObject(): GameObject {
+        //vytvoří nový objekt se stejnými hodnotami jako prefabObject
+        val obj = GameObject(
+            objectPrefab.windowSize,
+            objectPrefab.res,
+            objectPrefab.drawable,
+            objectPrefab.sizeRelativeToScreen,
+            objectPrefab.paint
+        )
+        obj.movement = objectPrefab.movement
+        return obj
     }
 
 }

@@ -68,6 +68,7 @@ open class GameObject(
 
     open fun update()
     {
+        Log.i("update:", "old")
 
     }
 
