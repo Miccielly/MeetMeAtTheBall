@@ -14,11 +14,10 @@ class FlyingObject(
     sizeRelativeToScreen: Float,
     paint: Paint?,
     mov: Vector2,
-    limit: Float
 ) : GameObject(windowSize!!, res!!, drawable, sizeRelativeToScreen, paint!!) {
 
     init {
-        movement.addValues(mov.x, mov.y, limit)
+        movement.setValues(mov.x, mov.y)
     }
 
     override fun update() {

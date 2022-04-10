@@ -38,7 +38,7 @@ class GameView(
     private var ax = 0f
     private var ay = 0f
 
-//    private lateinit var objectManager: ObjectManager
+    private lateinit var objectManager: ObjectManager
     private lateinit var obstacleManager: ObjectManager
 
     init {
@@ -60,13 +60,13 @@ class GameView(
         background = Background(windowSizeX, windowSizeY, resources)
         player = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, .1f, paint)
         table = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, .2f, paint)
-        obstacle = FlyingObject(Point(windowSizeX, windowSizeY), resources, R.drawable.reddot, .05f, paint, Vector2(3f,5f), 10f)
+        obstacle = FlyingObject(Point(windowSizeX, windowSizeY), resources, R.drawable.reddot, .05f, paint, Vector2(3f,5f))
 
         //SET POSITIONS
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
         table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-//        objectManager = ObjectManager(table, 3)
+        objectManager = ObjectManager(table, 3)
         obstacleManager = ObjectManager(obstacle, 4)
 
     }
@@ -113,7 +113,7 @@ class GameView(
                 paint
             )
 
-//            objectManager.drawObjects(canvas)
+            objectManager.drawObjects(canvas)
             obstacleManager.drawObjects(canvas)
             player.draw(canvas)
 
@@ -158,10 +158,10 @@ class GameView(
     private fun collisions(): Boolean {
         var col = false
 
-//        for (GameObject in objectManager.objects) {
-//            if (player.checkColision(GameObject))
-//                col = true
-//        }
+        for (GameObject in objectManager.objects) {
+            if (player.checkColision(GameObject as GameObject))
+                col = true
+        }
 
         return col
     }
@@ -188,7 +188,7 @@ class GameView(
     private fun obstacleBorderCollision()
     {
         for(FlyingObject in obstacleManager.objects) {
-            borderCollision(FlyingObject)
+                borderCollision(FlyingObject as GameObject)
         }
     }
 }
