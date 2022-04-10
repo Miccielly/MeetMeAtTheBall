@@ -3,7 +3,7 @@ package cz.underthetree.meetmeattheball.game
 import android.graphics.Canvas
 
 //Vytváří objekty a pokládá je do prostoru
-class ObjectPlacer(val objectPrefab: GameObject, val objectCount: Int) {
+class ObjectManager(val objectPrefab: GameObject, val objectCount: Int) {
 
     val objects: MutableList<GameObject> = arrayListOf()
 
@@ -57,6 +57,13 @@ class ObjectPlacer(val objectPrefab: GameObject, val objectCount: Int) {
     fun drawObjects(canvas: Canvas) {
         for (GameObject in objects) {
             GameObject.draw(canvas)
+        }
+    }
+
+    fun updateObjects()
+    {
+        for (GameObject in objects) {
+            GameObject.update()
         }
     }
 

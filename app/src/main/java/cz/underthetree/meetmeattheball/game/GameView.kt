@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.hardware.SensorManager
-import android.util.Log
 import android.view.SurfaceView
 import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
 import cz.underthetree.meetmeattheball.WalkingActivity
 import cz.underthetree.meetmeattheball.utils.Accelerometer
+import cz.underthetree.meetmeattheball.utils.Vector2
 
 class GameView(
     context: Context?,
@@ -31,13 +31,15 @@ class GameView(
     private val background: Background //pouze obrázek co stojí
     private var player: GameObject //objekt s kterým se pohybuje
     private var table: GameObject //objekt s kterým se pohybuje
+    private var obstacle: FlyingObject //objekt s kterým se pohybuje
 
     //Controls
     private lateinit var accelerometer: Accelerometer
     private var ax = 0f
     private var ay = 0f
 
-    private lateinit var objectPlacer: ObjectPlacer
+    private lateinit var objectManager: ObjectManager
+    private lateinit var obstacleManager: ObjectManager
 
     init {
         paint = Paint()
@@ -49,9 +51,6 @@ class GameView(
             //landscape mód osy přehozené tedy
             ay = tx
             ax = ty
-
-            //Log.i("ay",ay.toString())
-            //Log.i("ax",ax.toString())
         }
 
         //Log.i("ratioX", screenRatioX.toString())
@@ -59,15 +58,16 @@ class GameView(
 
         //Instantiate objects
         background = Background(windowSizeX, windowSizeY, resources)
-        player =
-            GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.sadbg, .1f, paint)
-        table = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.sadbg, .2f, paint)
+        player = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, .1f, paint)
+        table = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, .2f, paint)
+        obstacle = FlyingObject(Point(windowSizeX, windowSizeY), resources, R.drawable.reddot, .05f, paint, Vector2(3f,5f), 10f)
 
         //SET POSITIONS
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
         table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-        objectPlacer = ObjectPlacer(table, 3)
+        objectManager = ObjectManager(table, 3)
+        obstacleManager = ObjectManager(obstacle, 4)
 
     }
 
@@ -102,7 +102,7 @@ class GameView(
 
             if (collisions()) {
                 canvas.drawColor(Color.RED)   //clearing screen
-                showQuestion()
+            //    showQuestion()
             } else
                 canvas.drawColor(Color.BLUE)   //clearing screen
 
@@ -113,7 +113,8 @@ class GameView(
                 paint
             )
 
-            objectPlacer.drawObjects(canvas)
+            objectManager.drawObjects(canvas)
+            obstacleManager.drawObjects(canvas)
             player.draw(canvas)
 
             holder.unlockCanvasAndPost(canvas)
@@ -121,6 +122,8 @@ class GameView(
     }
 
     fun update() {
+        obstacleManager.updateObjects()
+        obstacleBorderCollision()
         movement()
         borderCollision(player)
     }
@@ -155,7 +158,7 @@ class GameView(
     private fun collisions(): Boolean {
         var col = false
 
-        for (GameObject in objectPlacer.objects) {
+        for (GameObject in objectManager.objects) {
             if (player.checkColision(GameObject))
                 col = true
         }
@@ -180,5 +183,12 @@ class GameView(
 
         activity.startActivity(i)
         activity.finish()
+    }
+
+    private fun obstacleBorderCollision()
+    {
+        for(FlyingObject in obstacleManager.objects) {
+            borderCollision(FlyingObject)
+        }
     }
 }

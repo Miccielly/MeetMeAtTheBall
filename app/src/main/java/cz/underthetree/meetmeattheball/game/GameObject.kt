@@ -6,14 +6,13 @@ import android.util.Log
 import cz.underthetree.meetmeattheball.utils.Vector2
 
 //TODO udělat variaci gameobjectu jen na sbírací věci, kde bude proměnná na uložení co načíst?(jen pokud bychom dělali i další třídy)
-class GameObject(
+open class GameObject(
     var windowSize: Point,
     val res: Resources,
     val drawable: Int,
     val sizeRelativeToScreen: Float,
     val paint: Paint
 ) {
-
     var bitmap: Bitmap   //obrázek objektu
     var transform: Vector2 = Vector2()   //pozice objektu
     var origin: Vector2 = Vector2()   //pozice objektu
@@ -64,6 +63,11 @@ class GameObject(
             return d < scale.x / 2  // dělíme dvouma jelikož jde o rádius poloměru
         } else
             return d < obj.scale.x / 2  // dělíme dvouma jelikož jde o rádius poloměru
+
+    }
+
+    open fun update()
+    {
 
     }
 
