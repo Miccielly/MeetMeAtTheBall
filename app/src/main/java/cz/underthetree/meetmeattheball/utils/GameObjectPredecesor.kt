@@ -19,7 +19,6 @@ interface GameObjectPredecesor {
     var scale: Vector2
     var movement: Vector2
 
-
     fun setPosition(x: Float, y: Float)
     fun addPosition(x: Float, y: Float)
 

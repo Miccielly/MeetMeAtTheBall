@@ -190,5 +190,10 @@ class GameView(
         for(FlyingObject in obstacleManager.objects) {
                 borderCollision(FlyingObject as GameObject)
         }
+
+//        borderCollision(obstacleManager.objects[0] as GameObject)
+//        borderCollision(obstacleManager.objects[1] as GameObject)
+//        borderCollision(obstacleManager.objects[2] as GameObject)
+
     }
 }

@@ -3,6 +3,7 @@ package cz.underthetree.meetmeattheball.game
 import android.graphics.Canvas
 import android.util.Log
 import cz.underthetree.meetmeattheball.utils.GameObjectPredecesor
+import cz.underthetree.meetmeattheball.utils.Vector2
 import kotlin.reflect.typeOf
 
 //Vytváří objekty a pokládá je do prostoru
@@ -37,6 +38,7 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
                 objects.add(duplicateObject(objectPrefab))
 
         }
+        Log.i("makeObj", "make")
     }
 
     fun drawObjects(canvas: Canvas) {
@@ -46,10 +48,8 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
     }
 
     fun updateObjects() {
-        var i = 0
         for (GameObject in objects) {
             GameObject.update()
-            Log.i("objectIndex:", i++.toString())
         }
     }
 
@@ -61,9 +61,8 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
             objectPrefab.drawable,
             objectPrefab.sizeRelativeToScreen,
             objectPrefab.paint
-            ,objectPrefab.movement
+            , Vector2(objectPrefab.movement.x, objectPrefab.movement.y)
         )
-        obj.movement = objectPrefab.movement
         return obj
     }
 
