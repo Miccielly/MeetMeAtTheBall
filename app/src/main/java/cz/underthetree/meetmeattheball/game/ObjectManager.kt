@@ -7,7 +7,7 @@ import cz.underthetree.meetmeattheball.utils.Vector2
 import kotlin.reflect.typeOf
 
 //Vytváří objekty a pokládá je do prostoru
-class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int) {
+class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int, val flyingObjectType: Boolean) {
 
     val objects: MutableList<GameObjectPredecesor> = arrayListOf()
 
@@ -30,15 +30,25 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
     fun makeObjects() {
         objects.add(objectPrefab)   //přidání prefabu
 
+        if(flyingObjectType)
+        {
+            objectPrefab.movement = Vector2((-7..7).random().toFloat(),(-7..7).random().toFloat())
+        }
+        else
+        {
+            objectPrefab.extrasValue = (0..2).random()
+        }
+
         //přidání kopií prefabu (-2 protože první -1 je prefab a začínáme od nuly takže to je druhý -1)
         for (i in 0..objectCount - 2) {
-            if(objectPrefab == typeOf<FlyingObject>())
-                objects.add(duplicateFlyingObject(objectPrefab))
-            else
-                objects.add(duplicateObject(objectPrefab))
 
+            if(flyingObjectType)
+                objects.add(duplicateFlyingObject(objectPrefab))
+            else {
+                objects.add(duplicateObject(objectPrefab))
+                Log.i("makeObj", "make")
+            }
         }
-        Log.i("makeObj", "make")
     }
 
     fun drawObjects(canvas: Canvas) {
@@ -53,7 +63,7 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
         }
     }
 
-    private fun duplicateObject(obj:GameObjectPredecesor): FlyingObject {
+    private fun duplicateFlyingObject(obj:GameObjectPredecesor): FlyingObject {
         //vytvoří nový objekt se stejnými hodnotami jako prefabObject
         val obj = FlyingObject(
             objectPrefab.windowSize,
@@ -61,12 +71,12 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
             objectPrefab.drawable,
             objectPrefab.sizeRelativeToScreen,
             objectPrefab.paint
-            , Vector2(objectPrefab.movement.x, objectPrefab.movement.y)
+            , Vector2((-7..7).random().toFloat(),(-7..7).random().toFloat())
         )
         return obj
     }
 
-    private fun duplicateFlyingObject(obj: GameObjectPredecesor): GameObject {
+    private fun duplicateObject(obj: GameObjectPredecesor): GameObject {
         //vytvoří nový objekt se stejnými hodnotami jako prefabObject
         val obj = GameObject(
             objectPrefab.windowSize,
@@ -75,6 +85,8 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
             objectPrefab.sizeRelativeToScreen,
             objectPrefab.paint
         )
+        obj.extrasValue = (0..2).random()
+        Log.i("extrasValue", obj.extrasValue.toString())
         return obj
     }
 }

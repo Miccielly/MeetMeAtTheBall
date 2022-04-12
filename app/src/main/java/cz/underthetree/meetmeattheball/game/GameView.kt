@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.hardware.SensorManager
+import android.util.Log
 import android.view.SurfaceView
 import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
@@ -38,8 +39,13 @@ class GameView(
     private var ax = 0f
     private var ay = 0f
 
+    //GAME OBJECTS
     private lateinit var objectManager: ObjectManager
     private lateinit var obstacleManager: ObjectManager
+
+    //GAME VALUES
+    private var drunkness = 0f
+    private val drunknessLimit = .7f
 
     init {
         paint = Paint()
@@ -58,16 +64,26 @@ class GameView(
 
         //Instantiate objects
         background = Background(windowSizeX, windowSizeY, resources)
-        player = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, .1f, paint)
-        table = GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, .2f, paint)
-        obstacle = FlyingObject(Point(windowSizeX, windowSizeY), resources, R.drawable.reddot, .05f, paint, Vector2(3f,5f))
+        player =
+            GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, .1f, paint)
+        table = GameObject(
+            Point(windowSizeX, windowSizeY),
+            resources,
+            R.drawable.tablewhite,
+            .2f,
+            paint
+        )
+        obstacle = FlyingObject(
+            Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, .15f, paint,
+            Vector2()
+        )
 
         //SET POSITIONS
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
-        table.setPosition(500 * screenRatioX, 500 * screenRatioY)
+//        table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-        objectManager = ObjectManager(table, 3)
-        obstacleManager = ObjectManager(obstacle, 4)
+        objectManager = ObjectManager(table, 2, false)
+        obstacleManager = ObjectManager(obstacle, 8, true)
 
     }
 
@@ -100,9 +116,9 @@ class GameView(
         if (holder.surface.isValid()) {
             val canvas: Canvas = holder.lockCanvas()
 
-            if (collisions()) {
+            if (tableCollisions()) {
                 canvas.drawColor(Color.RED)   //clearing screen
-            //    showQuestion()
+//                showQuestion()
             } else
                 canvas.drawColor(Color.BLUE)   //clearing screen
 
@@ -124,6 +140,7 @@ class GameView(
     fun update() {
         obstacleManager.updateObjects()
         obstacleBorderCollision()
+        alcoholCollisions()
         movement()
         borderCollision(player)
     }
@@ -150,20 +167,36 @@ class GameView(
         else
             ay = (player.movement.y * -.03f)  //pokud se telefon nenaklání vůbec
 
+        drunkInfluence()
         player.movement.addValues(ax, ay, 15f)
 
         player.addPosition(player.movement.x * screenRatioX, player.movement.y * screenRatioY)
     }
 
-    private fun collisions(): Boolean {
+    private fun tableCollisions(): Boolean {
         var col = false
 
         for (GameObject in objectManager.objects) {
-            if (player.checkColision(GameObject as GameObject))
+            if (player.checkColision(GameObject as GameObject)) {
                 col = true
+                showQuestion(GameObject)
+                return col  //stačí jeden stůl nemusíme projíždět jestli tu je další
+            }
+        }
+        return col
+    }
+
+    private fun alcoholCollisions() {
+        for (GameObject in obstacleManager.objects) {
+            if (player.checkColision(GameObject as GameObject)) {
+                drunkness += 0.1f
+                if (drunkness >= drunknessLimit) {
+                    drunkness = drunknessLimit
+                }
+                Log.i("alcohol", "");
+            }
         }
 
-        return col
     }
 
     private fun borderCollision(obj: GameObject) {
@@ -177,23 +210,33 @@ class GameView(
         }
     }
 
-    fun showQuestion() {
+    fun showQuestion(obj: GameObject) {
         val i = Intent(activity, QuestionActivity::class.java)
-        i.putExtra("characterIndex", 2)
+        i.putExtra("characterIndex", obj.extrasValue)
 
         activity.startActivity(i)
         activity.finish()
     }
 
-    private fun obstacleBorderCollision()
-    {
-        for(FlyingObject in obstacleManager.objects) {
-                borderCollision(FlyingObject as GameObject)
+    private fun obstacleBorderCollision() {
+        for (FlyingObject in obstacleManager.objects) {
+            borderCollision(FlyingObject as GameObject)
         }
 
 //        borderCollision(obstacleManager.objects[0] as GameObject)
 //        borderCollision(obstacleManager.objects[1] as GameObject)
 //        borderCollision(obstacleManager.objects[2] as GameObject)
 
+    }
+
+    private fun drunkInfluence() {
+        var dx = (-10..10).random().toFloat()
+        dx *= drunkness
+
+        var dy = (-10..10).random().toFloat()
+        dy *= drunkness
+
+        ax += dx
+        ay += dy
     }
 }
