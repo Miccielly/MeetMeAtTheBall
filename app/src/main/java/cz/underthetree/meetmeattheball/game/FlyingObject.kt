@@ -16,6 +16,8 @@ class FlyingObject(
     mov: Vector2,
 ) : GameObject(windowSize!!, res!!, drawable, sizeRelativeToScreen, paint!!) {
 
+    var collided = false
+
     init {
         movement.setValues(mov.x, mov.y)
     }
@@ -24,4 +26,5 @@ class FlyingObject(
         Log.i("update:", "new")
         addPosition(movement.x, movement.y)
     }
+
 }

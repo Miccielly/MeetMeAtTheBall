@@ -32,7 +32,7 @@ class GameView(
     private val background: Background //pouze obrázek co stojí
     private var player: GameObject //objekt s kterým se pohybuje
     private var table: GameObject //objekt s kterým se pohybuje
-    private var obstacle: FlyingObject //objekt s kterým se pohybuje
+    private var alcohol: FlyingObject //objekt s kterým se pohybuje
 
     //Controls
     private lateinit var accelerometer: Accelerometer
@@ -41,11 +41,12 @@ class GameView(
 
     //GAME OBJECTS
     private lateinit var objectManager: ObjectManager
-    private lateinit var obstacleManager: ObjectManager
+    private lateinit var alcoholObjectManager: ObjectManager
 
     //GAME VALUES
     private var drunkness = 0f
     private val drunknessLimit = .7f
+    private val drunkMovement = 8
 
     init {
         paint = Paint()
@@ -73,7 +74,7 @@ class GameView(
             .2f,
             paint
         )
-        obstacle = FlyingObject(
+        alcohol = FlyingObject(
             Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, .15f, paint,
             Vector2()
         )
@@ -83,7 +84,7 @@ class GameView(
 //        table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
         objectManager = ObjectManager(table, 2, false)
-        obstacleManager = ObjectManager(obstacle, 8, true)
+        alcoholObjectManager = ObjectManager(alcohol, 8, true)
 
     }
 
@@ -130,7 +131,7 @@ class GameView(
             )
 
             objectManager.drawObjects(canvas)
-            obstacleManager.drawObjects(canvas)
+            alcoholObjectManager.drawObjects(canvas)
             player.draw(canvas)
 
             holder.unlockCanvasAndPost(canvas)
@@ -138,11 +139,13 @@ class GameView(
     }
 
     fun update() {
-        obstacleManager.updateObjects()
-        obstacleBorderCollision()
-        alcoholCollisions()
-        movement()
-        borderCollision(player)
+        alcoholObjectManager.updateObjects()    //pohyb objektů alkoholu
+        alcoholBorderCollision()    //narazil alkohol do hrany obrazovky?
+        alcoholCollisions() //je alkohol v okruhu kolize?
+        resetAlcoholCollisions()    //vyskočil alkohol z okruhu kolize?
+
+        movement()  //ovládání pohybu hráče
+        borderCollision(player) //narazil objekt hráče do hrany obrazovky?
     }
 
     fun sleep() {
@@ -187,16 +190,46 @@ class GameView(
     }
 
     private fun alcoholCollisions() {
-        for (GameObject in obstacleManager.objects) {
+        for (GameObject in alcoholObjectManager.objects) {
+
+            //je object v kolizi?
             if (player.checkColision(GameObject as GameObject)) {
-                drunkness += 0.1f
-                if (drunkness >= drunknessLimit) {
-                    drunkness = drunknessLimit
+
+                //přetypování na flying object a nastavení kolize na true
+                val obj = GameObject as FlyingObject
+
+                //pokud ještě necollidoval přidat opilost a nastavit kolizi na true
+                if (!obj.collided) {
+                    if (drunkness < drunknessLimit) {
+                        drunkness += 0.05f
+                        obj.collided = true
+                        Log.i("collision", obj.collided.toString());
+
+                    } else
+                        drunkness = drunknessLimit
                 }
-                Log.i("alcohol", "");
+                Log.i("alcohol", drunkness.toString());
             }
         }
 
+    }
+
+    private fun resetAlcoholCollisions() {
+        for (GameObject in alcoholObjectManager.objects) {
+            //je object mimo kolizi?
+            if (!player.checkColision(GameObject as GameObject)) {
+
+                //přetypování na flying object a nastavení kolize na true
+                val obj = GameObject as FlyingObject
+
+                //pokud byl v kolizi
+                if (obj.collided) {
+                    obj.collided = false
+                    Log.i("collision", obj.collided.toString());
+                }
+
+            }
+        }
     }
 
     private fun borderCollision(obj: GameObject) {
@@ -218,22 +251,17 @@ class GameView(
         activity.finish()
     }
 
-    private fun obstacleBorderCollision() {
-        for (FlyingObject in obstacleManager.objects) {
+    private fun alcoholBorderCollision() {
+        for (FlyingObject in alcoholObjectManager.objects) {
             borderCollision(FlyingObject as GameObject)
         }
-
-//        borderCollision(obstacleManager.objects[0] as GameObject)
-//        borderCollision(obstacleManager.objects[1] as GameObject)
-//        borderCollision(obstacleManager.objects[2] as GameObject)
-
     }
 
     private fun drunkInfluence() {
-        var dx = (-10..10).random().toFloat()
+        var dx = (-drunkMovement..drunkMovement).random().toFloat()
         dx *= drunkness
 
-        var dy = (-10..10).random().toFloat()
+        var dy = (-drunkMovement..drunkMovement).random().toFloat()
         dy *= drunkness
 
         ax += dx

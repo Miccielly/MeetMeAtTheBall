@@ -70,6 +70,8 @@ open class GameObject
 
     }
 
+
+
     override fun update() {
         Log.i("update:", "old")
     }
