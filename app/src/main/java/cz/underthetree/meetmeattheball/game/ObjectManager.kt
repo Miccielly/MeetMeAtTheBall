@@ -7,7 +7,12 @@ import cz.underthetree.meetmeattheball.utils.Vector2
 import kotlin.reflect.typeOf
 
 //Vytváří objekty a pokládá je do prostoru
-class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int, val flyingObjectType: Boolean) {
+class ObjectManager(
+    val objectPrefab: GameObjectPredecesor,
+    val objectCount: Int,
+    val screenRatio: Vector2,
+    val flyingObjectType: Boolean
+) {
 
     val objects: MutableList<GameObjectPredecesor> = arrayListOf()
 
@@ -30,19 +35,16 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
     fun makeObjects() {
         objects.add(objectPrefab)   //přidání prefabu
 
-        if(flyingObjectType)
-        {
-            objectPrefab.movement = Vector2((-7..7).random().toFloat(),(-7..7).random().toFloat())
-        }
-        else
-        {
+        if (flyingObjectType) {
+            objectPrefab.movement = Vector2((-7..7).random().toFloat(), (-7..7).random().toFloat())
+        } else {
             objectPrefab.extrasValue = (0..2).random()
         }
 
         //přidání kopií prefabu (-2 protože první -1 je prefab a začínáme od nuly takže to je druhý -1)
         for (i in 0..objectCount - 2) {
 
-            if(flyingObjectType)
+            if (flyingObjectType)
                 objects.add(duplicateFlyingObject(objectPrefab))
             else {
                 objects.add(duplicateObject(objectPrefab))
@@ -59,19 +61,18 @@ class ObjectManager(val objectPrefab: GameObjectPredecesor, val objectCount: Int
 
     fun updateObjects() {
         for (GameObject in objects) {
-            GameObject.update()
+            GameObject.update(screenRatio)
         }
     }
 
-    private fun duplicateFlyingObject(obj:GameObjectPredecesor): FlyingObject {
+    private fun duplicateFlyingObject(obj: GameObjectPredecesor): FlyingObject {
         //vytvoří nový objekt se stejnými hodnotami jako prefabObject
         val obj = FlyingObject(
             objectPrefab.windowSize,
             objectPrefab.res,
             objectPrefab.drawable,
             objectPrefab.sizeRelativeToScreen,
-            objectPrefab.paint
-            , Vector2((-7..7).random().toFloat(),(-7..7).random().toFloat())
+            objectPrefab.paint, Vector2((-7..7).random().toFloat(), (-7..7).random().toFloat())
         )
         return obj
     }

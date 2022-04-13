@@ -72,7 +72,7 @@ open class GameObject
 
 
 
-    override fun update() {
+    override fun update(screenRatio :Vector2) {
         Log.i("update:", "old")
     }
 

@@ -83,8 +83,8 @@ class GameView(
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
 //        table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-        objectManager = ObjectManager(table, 2, false)
-        alcoholObjectManager = ObjectManager(alcohol, 8, true)
+        objectManager = ObjectManager(table, 2, Vector2(screenRatioX, screenRatioY),false)
+        alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY),true)
 
     }
 

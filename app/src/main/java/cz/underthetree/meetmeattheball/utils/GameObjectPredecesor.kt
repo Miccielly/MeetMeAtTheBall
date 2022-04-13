@@ -23,7 +23,7 @@ interface GameObjectPredecesor {
     fun setPosition(x: Float, y: Float)
     fun addPosition(x: Float, y: Float)
 
-    open fun update()
+    open fun update(screenRatio: Vector2)
     fun draw(canvas: Canvas)
     fun checkColision(obj: GameObject): Boolean
     }

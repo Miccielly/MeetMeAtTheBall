@@ -22,9 +22,9 @@ class FlyingObject(
         movement.setValues(mov.x, mov.y)
     }
 
-    override fun update() {
+    override fun update(screenRatio: Vector2) {
         Log.i("update:", "new")
-        addPosition(movement.x, movement.y)
+        addPosition(movement.x * screenRatio.x, movement.y * screenRatio.y)
     }
 
 }
