@@ -33,15 +33,17 @@ class GameView(
     private var player: GameObject //objekt s kterým se pohybuje
     private var table: GameObject //objekt s kterým se pohybuje
     private var alcohol: FlyingObject //objekt s kterým se pohybuje
+    private var time: FlyingObject //objekt s kterým se pohybuje
 
     //Controls
-    private lateinit var accelerometer: Accelerometer
+    private var accelerometer: Accelerometer
     private var ax = 0f
     private var ay = 0f
 
     //GAME OBJECTS
-    private lateinit var objectManager: ObjectManager
-    private lateinit var alcoholObjectManager: ObjectManager
+    private var objectManager: ObjectManager
+    private var alcoholObjectManager: ObjectManager
+    private lateinit var timeObjectManager: ObjectManager
 
     //GAME VALUES
     private var drunkness = 0f
@@ -78,6 +80,10 @@ class GameView(
             Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, .15f, paint,
             Vector2()
         )
+        time = FlyingObject(
+            Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, .075f, paint,
+            Vector2()
+        )
 
         //SET POSITIONS
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
@@ -85,6 +91,7 @@ class GameView(
 
         objectManager = ObjectManager(table, 2, Vector2(screenRatioX, screenRatioY),false)
         alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY),true)
+        timeObjectManager = ObjectManager(time, 8, Vector2(screenRatioX, screenRatioY),true)
 
     }
 
@@ -132,6 +139,7 @@ class GameView(
 
             objectManager.drawObjects(canvas)
             alcoholObjectManager.drawObjects(canvas)
+            timeObjectManager.drawObjects(canvas)
             player.draw(canvas)
 
             holder.unlockCanvasAndPost(canvas)
@@ -143,6 +151,10 @@ class GameView(
         alcoholBorderCollision()    //narazil alkohol do hrany obrazovky?
         alcoholCollisions() //je alkohol v okruhu kolize?
         resetAlcoholCollisions()    //vyskočil alkohol z okruhu kolize?
+
+        timeObjectManager.updateObjects()    //pohyb objektů alkoholu
+        timeBorderCollision()    //narazil alkohol do hrany obrazovky?
+
 
         movement()  //ovládání pohybu hráče
         borderCollision(player) //narazil objekt hráče do hrany obrazovky?
@@ -251,8 +263,15 @@ class GameView(
         activity.finish()
     }
 
+    //TODO udělat pro time a alcohol to samé
     private fun alcoholBorderCollision() {
         for (FlyingObject in alcoholObjectManager.objects) {
+            borderCollision(FlyingObject as GameObject)
+        }
+    }
+
+    private fun timeBorderCollision() {
+        for (FlyingObject in timeObjectManager.objects) {
             borderCollision(FlyingObject as GameObject)
         }
     }
