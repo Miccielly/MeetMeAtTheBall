@@ -41,6 +41,10 @@ class ObjectManager(
             objectPrefab.extrasValue = (0..2).random()
         }
 
+        //pokud máme jen jeden objekt tak se přidá pouze prefab
+        if(objectCount < 2)
+            return
+
         //přidání kopií prefabu (-2 protože první -1 je prefab a začínáme od nuly takže to je druhý -1)
         for (i in 0..objectCount - 2) {
 

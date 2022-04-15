@@ -10,6 +10,7 @@ import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
 import cz.underthetree.meetmeattheball.WalkingActivity
 import cz.underthetree.meetmeattheball.utils.Accelerometer
+import cz.underthetree.meetmeattheball.utils.GameObjectPredecesor
 import cz.underthetree.meetmeattheball.utils.Vector2
 
 class GameView(
@@ -31,7 +32,8 @@ class GameView(
 
     private val background: Background //pouze obrázek co stojí
     private var player: GameObject //objekt s kterým se pohybuje
-    private var table: GameObject //objekt s kterým se pohybuje
+    private var table: GameObject //objekt který reprezentuje stůl ke kterému se má hráč dostat
+    private var character: GameObject //objekt který reprezentuje charakter u cílového stolu
     private var alcohol: FlyingObject //objekt s kterým se pohybuje
     private var time: FlyingObject //objekt s kterým se pohybuje
 
@@ -43,12 +45,15 @@ class GameView(
     //GAME OBJECTS
     private var objectManager: ObjectManager
     private var alcoholObjectManager: ObjectManager
-    private lateinit var timeObjectManager: ObjectManager
+    private var timeObjectManager: ObjectManager
+//    private var characterObjectManager: ObjectManager
 
     //GAME VALUES
     private var drunkness = 0f
     private val drunknessLimit = .7f
     private val drunkMovement = 8
+    private var collectedTime = 0
+    private val maxCollectedTime = 15
 
     init {
         paint = Paint()
@@ -76,6 +81,14 @@ class GameView(
             .2f,
             paint
         )
+        //TODO udělat charakter nečtvercový, aby nebyl spláclý
+        character = GameObject(
+            Point(windowSizeX, windowSizeY),
+            resources,
+            R.drawable.c_cestovatel,
+            .2f,
+            paint
+        )
         alcohol = FlyingObject(
             Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, .15f, paint,
             Vector2()
@@ -89,9 +102,14 @@ class GameView(
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
 //        table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-        objectManager = ObjectManager(table, 2, Vector2(screenRatioX, screenRatioY),false)
-        alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY),true)
-        timeObjectManager = ObjectManager(time, 8, Vector2(screenRatioX, screenRatioY),true)
+        objectManager = ObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false)
+        alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
+        timeObjectManager = ObjectManager(time, 8, Vector2(screenRatioX, screenRatioY), true)
+
+        character.setPosition(
+            table.transform.x,
+            table.transform.y - 50 * screenRatioY
+        ) //ikdyž je table v objectManager má jen jeden objekt
 
     }
 
@@ -124,9 +142,8 @@ class GameView(
         if (holder.surface.isValid()) {
             val canvas: Canvas = holder.lockCanvas()
 
-            if (tableCollisions()) {
+            if (collectedTime >= maxCollectedTime && tableCollisions()) {
                 canvas.drawColor(Color.RED)   //clearing screen
-//                showQuestion()
             } else
                 canvas.drawColor(Color.BLUE)   //clearing screen
 
@@ -137,7 +154,11 @@ class GameView(
                 paint
             )
 
+            if (collectedTime >= maxCollectedTime)
+                character.draw(canvas)
+
             objectManager.drawObjects(canvas)
+//            table.draw(canvas)
             alcoholObjectManager.drawObjects(canvas)
             timeObjectManager.drawObjects(canvas)
             player.draw(canvas)
@@ -148,14 +169,14 @@ class GameView(
 
     fun update() {
         alcoholObjectManager.updateObjects()    //pohyb objektů alkoholu
-        alcoholBorderCollision()    //narazil alkohol do hrany obrazovky?
+        flyingObjBorderCollision(alcoholObjectManager.objects)    //narazil alkohol do hrany obrazovky?
         alcoholCollisions() //je alkohol v okruhu kolize?
-        resetAlcoholCollisions()    //vyskočil alkohol z okruhu kolize?
+        resetFlyingObjectCollisions(alcoholObjectManager.objects)    //vyskočil alkohol z okruhu kolize?
 
-        timeObjectManager.updateObjects()    //pohyb objektů alkoholu
-        timeBorderCollision()    //narazil alkohol do hrany obrazovky?
-
-
+        timeObjectManager.updateObjects()    //pohyb objektů času
+        flyingObjBorderCollision(timeObjectManager.objects)    //narazil čas do hrany obrazovky?
+        timeCollisions()    //střet s objektem času?
+        resetFlyingObjectCollisions(timeObjectManager.objects)
         movement()  //ovládání pohybu hráče
         borderCollision(player) //narazil objekt hráče do hrany obrazovky?
     }
@@ -192,7 +213,7 @@ class GameView(
         var col = false
 
         for (GameObject in objectManager.objects) {
-            if (player.checkColision(GameObject as GameObject)) {
+            if (collectedTime >= maxCollectedTime && player.checkColision(GameObject as GameObject)) {
                 col = true
                 showQuestion(GameObject)
                 return col  //stačí jeden stůl nemusíme projíždět jestli tu je další
@@ -223,9 +244,46 @@ class GameView(
                 Log.i("alcohol", drunkness.toString());
             }
         }
-
     }
 
+    private fun timeCollisions() {
+        for (GameObject in timeObjectManager.objects) {
+
+            //je object v kolizi?
+            if (player.checkColision(GameObject as GameObject)) {
+
+                //přetypování na flying object a nastavení kolize na true
+                val obj = GameObject as FlyingObject
+
+                //pokud ještě necollidoval přidat opilost a nastavit kolizi na true
+                if (!obj.collided) {
+                    obj.collided = true
+                    collectedTime++
+                }
+                Log.i("collectedTime", collectedTime.toString());
+                Log.i("collidedReset","false")
+
+            }
+        }
+    }
+
+    private fun resetFlyingObjectCollisions(list: MutableList<GameObjectPredecesor>) {
+        for (GameObject in list) {
+            //je object mimo kolizi?
+            if (!player.checkColision(GameObject as GameObject)) {
+
+                //přetypování na flying object a nastavení kolize na true
+                val obj = GameObject as FlyingObject
+
+                //pokud byl v kolizi
+                if (obj.collided) {
+                    obj.collided = false
+                }
+                Log.i("collidedReset","true")
+            }
+        }
+    }
+    /*
     private fun resetAlcoholCollisions() {
         for (GameObject in alcoholObjectManager.objects) {
             //je object mimo kolizi?
@@ -243,6 +301,7 @@ class GameView(
             }
         }
     }
+*/
 
     private fun borderCollision(obj: GameObject) {
         if (obj.transform.x < 0 || obj.transform.x > windowSizeX) {
@@ -264,17 +323,23 @@ class GameView(
     }
 
     //TODO udělat pro time a alcohol to samé
-    private fun alcoholBorderCollision() {
-        for (FlyingObject in alcoholObjectManager.objects) {
+//    private fun alcoholBorderCollision() {
+//        for (FlyingObject in alcoholObjectManager.objects) {
+//            borderCollision(FlyingObject as GameObject)
+//        }
+//    }
+
+    private fun flyingObjBorderCollision(list: MutableList<GameObjectPredecesor>) {
+        for (FlyingObject in list) {
             borderCollision(FlyingObject as GameObject)
         }
     }
 
-    private fun timeBorderCollision() {
-        for (FlyingObject in timeObjectManager.objects) {
-            borderCollision(FlyingObject as GameObject)
-        }
-    }
+//    private fun timeBorderCollision() {
+//        for (FlyingObject in timeObjectManager.objects) {
+//            borderCollision(FlyingObject as GameObject)
+//        }
+//    }
 
     private fun drunkInfluence() {
         var dx = (-drunkMovement..drunkMovement).random().toFloat()
@@ -285,5 +350,10 @@ class GameView(
 
         ax += dx
         ay += dy
+    }
+
+    private fun showCharacter() {
+        //TODO zobrazení že hráč může dojít ke stolu
+
     }
 }
