@@ -3,6 +3,7 @@ package cz.underthetree.meetmeattheball.game
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.hardware.SensorManager
 import android.util.Log
 import android.view.SurfaceView
@@ -48,12 +49,14 @@ class GameView(
     private var timeObjectManager: ObjectManager
 //    private var characterObjectManager: ObjectManager
 
+    //GAME OBJECTS VALUES
+    private var charPicture: Int
     //GAME VALUES
     private var drunkness = 0f
     private val drunknessLimit = .7f
     private val drunkMovement = 8
     private var collectedTime = 0
-    private val maxCollectedTime = 15
+    private val maxCollectedTime = (9..15).random()
 
     init {
         paint = Paint()
@@ -81,11 +84,20 @@ class GameView(
             .2f,
             paint
         )
+
+        when (table.extrasValue)
+        {
+            0 -> charPicture = R.drawable.c_psycholog
+            1 -> charPicture = R.drawable.c_kuchar
+            2 -> charPicture = R.drawable.c_cestovatel
+            else -> charPicture = R.drawable.greendot
+        }
+
         //TODO udělat charakter nečtvercový, aby nebyl spláclý
         character = GameObject(
             Point(windowSizeX, windowSizeY),
             resources,
-            R.drawable.c_cestovatel,
+            charPicture,
             .2f,
             paint
         )

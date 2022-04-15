@@ -20,7 +20,9 @@ open class GameObject
     override var origin: Vector2 = Vector2()   //pozice objektu
     override var scale: Vector2 = Vector2()   //velikost objektu (od levé strany do pravé strany)
     override var movement: Vector2 = Vector2()
-    override var extrasValue = -1
+    override var extrasValue = (0..2).random()  //natvrdo max počet charakterů
+
+
 
     init {
         scale.x =

@@ -90,7 +90,7 @@ class ObjectManager(
             objectPrefab.sizeRelativeToScreen,
             objectPrefab.paint
         )
-        obj.extrasValue = (0..2).random()
+//        obj.extrasValue = (0..2).random()
         Log.i("extrasValue", obj.extrasValue.toString())
         return obj
     }
