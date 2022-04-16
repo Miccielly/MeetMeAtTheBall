@@ -3,7 +3,6 @@ package cz.underthetree.meetmeattheball.game
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.hardware.SensorManager
 import android.util.Log
 import android.view.SurfaceView
@@ -39,39 +38,26 @@ class GameView(
     private var time: FlyingObject //objekt s kterým se pohybuje
 
     //Controls
-    private var accelerometer: Accelerometer
-    private var ax = 0f
-    private var ay = 0f
+    private var controls: Controls = Controls(this.context) //hnedka instancujeme Controls
 
     //GAME OBJECTS
-    private var objectManager: ObjectManager
+    private var tableManager: ObjectManager
     private var alcoholObjectManager: ObjectManager
     private var timeObjectManager: ObjectManager
-//    private var characterObjectManager: ObjectManager
 
     //GAME OBJECTS VALUES
-    private var charPicture: Int
+    private var charPicture: Int    //obrázek který se objeví u stolu
+
     //GAME VALUES
-    private var drunkness = 0f
     private val drunknessLimit = .7f
-    private val drunkMovement = 8
     private var collectedTime = 0
     private val maxCollectedTime = (9..15).random()
 
+    private var characterArrived = false
+    private var tableCollision = false
+
     init {
         paint = Paint()
-        //AKCELEROMETR CODE
-        accelerometer = Accelerometer(context)
-
-        // create a listener for accelerometer
-        accelerometer.setListener { tx, ty, tz ->
-            //landscape mód osy přehozené tedy
-            ay = tx
-            ax = ty
-        }
-
-        //Log.i("ratioX", screenRatioX.toString())
-        //Log.i("ratioY", screenRatioY.toString())
 
         //Instantiate objects
         background = Background(windowSizeX, windowSizeY, resources)
@@ -85,8 +71,7 @@ class GameView(
             paint
         )
 
-        when (table.extrasValue)
-        {
+        when (table.extrasValue) {
             0 -> charPicture = R.drawable.c_psycholog
             1 -> charPicture = R.drawable.c_kuchar
             2 -> charPicture = R.drawable.c_cestovatel
@@ -112,16 +97,15 @@ class GameView(
 
         //SET POSITIONS
         player.setPosition(500 * screenRatioX, 200 * screenRatioY)
-//        table.setPosition(500 * screenRatioX, 500 * screenRatioY)
 
-        objectManager = ObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false)
+        tableManager = ObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false)
         alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
         timeObjectManager = ObjectManager(time, 8, Vector2(screenRatioX, screenRatioY), true)
 
         character.setPosition(
             table.transform.x,
             table.transform.y - 50 * screenRatioY
-        ) //ikdyž je table v objectManager má jen jeden objekt
+        ) //ikdyž je table v objectManager má jen jeden objekt tudíž k němu patří jen jeden charakter
 
     }
 
@@ -138,7 +122,7 @@ class GameView(
         thread = Thread(this)
         thread.start()
 
-        accelerometer.register()
+        controls.accelerometer.register()
     }
 
     fun pause() {
@@ -146,7 +130,7 @@ class GameView(
         //pravděpodobně tady ani join nemá být?
         thread.join()   //v javě tohle bylo obalené try catchem
 
-        accelerometer.unregister()
+        controls.accelerometer.unregister()
     }
 
     fun draw() {
@@ -154,7 +138,7 @@ class GameView(
         if (holder.surface.isValid()) {
             val canvas: Canvas = holder.lockCanvas()
 
-            if (collectedTime >= maxCollectedTime && tableCollisions()) {
+            if (tableCollision) {
                 canvas.drawColor(Color.RED)   //clearing screen
             } else
                 canvas.drawColor(Color.BLUE)   //clearing screen
@@ -169,8 +153,8 @@ class GameView(
             if (collectedTime >= maxCollectedTime)
                 character.draw(canvas)
 
-            objectManager.drawObjects(canvas)
-//            table.draw(canvas)
+            tableManager.drawObjects(canvas)
+
             alcoholObjectManager.drawObjects(canvas)
             timeObjectManager.drawObjects(canvas)
             player.draw(canvas)
@@ -180,6 +164,8 @@ class GameView(
     }
 
     fun update() {
+        tableCollision = tableCollisions()
+
         alcoholObjectManager.updateObjects()    //pohyb objektů alkoholu
         flyingObjBorderCollision(alcoholObjectManager.objects)    //narazil alkohol do hrany obrazovky?
         alcoholCollisions() //je alkohol v okruhu kolize?
@@ -189,7 +175,10 @@ class GameView(
         flyingObjBorderCollision(timeObjectManager.objects)    //narazil čas do hrany obrazovky?
         timeCollisions()    //střet s objektem času?
         resetFlyingObjectCollisions(timeObjectManager.objects)
-        movement()  //ovládání pohybu hráče
+
+        controls.movement(player)  //ovládání pohybu hráče
+        player.addPosition(player.movement.x * screenRatioX, player.movement.y * screenRatioY)  //přidání pozice o aktuální movement hráče normovaný na velikost obrazovky
+
         borderCollision(player) //narazil objekt hráče do hrany obrazovky?
     }
 
@@ -197,34 +186,10 @@ class GameView(
         Thread.sleep(17)
     }
 
-    fun movement() {
-        val tolerance = 1.5f
-
-        //PŘEVEDENÍ NA 1 A -1
-        if (ax > tolerance)
-            ax = tolerance
-        else if (ax < -tolerance)
-            ax = -tolerance
-        else
-            ax = (player.movement.x * -.03f)  //pokud se telefon nenaklání vůbec
-
-        if (ay > tolerance)
-            ay = tolerance
-        else if (ay < -tolerance)
-            ay = -tolerance
-        else
-            ay = (player.movement.y * -.03f)  //pokud se telefon nenaklání vůbec
-
-        drunkInfluence()
-        player.movement.addValues(ax, ay, 15f)
-
-        player.addPosition(player.movement.x * screenRatioX, player.movement.y * screenRatioY)
-    }
-
     private fun tableCollisions(): Boolean {
         var col = false
 
-        for (GameObject in objectManager.objects) {
+        for (GameObject in tableManager.objects) {
             if (collectedTime >= maxCollectedTime && player.checkColision(GameObject as GameObject)) {
                 col = true
                 showQuestion(GameObject)
@@ -245,15 +210,15 @@ class GameView(
 
                 //pokud ještě necollidoval přidat opilost a nastavit kolizi na true
                 if (!obj.collided) {
-                    if (drunkness < drunknessLimit) {
-                        drunkness += 0.05f
+                    if (controls.drunkness < drunknessLimit) {
+                        controls.drunkness += 0.05f
                         obj.collided = true
                         Log.i("collision", obj.collided.toString());
 
                     } else
-                        drunkness = drunknessLimit
+                        controls.drunkness = drunknessLimit
                 }
-                Log.i("alcohol", drunkness.toString());
+                Log.i("alcohol", controls.drunkness.toString());
             }
         }
     }
@@ -271,9 +236,13 @@ class GameView(
                 if (!obj.collided) {
                     obj.collided = true
                     collectedTime++
+
+                    //posbírán všechen potřebný čas?
+                    if (collectedTime >= maxCollectedTime)
+                        characterArrived = true
                 }
                 Log.i("collectedTime", collectedTime.toString());
-                Log.i("collidedReset","false")
+                Log.i("collidedReset", "false")
 
             }
         }
@@ -291,29 +260,10 @@ class GameView(
                 if (obj.collided) {
                     obj.collided = false
                 }
-                Log.i("collidedReset","true")
+                Log.i("collidedReset", "true")
             }
         }
     }
-    /*
-    private fun resetAlcoholCollisions() {
-        for (GameObject in alcoholObjectManager.objects) {
-            //je object mimo kolizi?
-            if (!player.checkColision(GameObject as GameObject)) {
-
-                //přetypování na flying object a nastavení kolize na true
-                val obj = GameObject as FlyingObject
-
-                //pokud byl v kolizi
-                if (obj.collided) {
-                    obj.collided = false
-                    Log.i("collision", obj.collided.toString());
-                }
-
-            }
-        }
-    }
-*/
 
     private fun borderCollision(obj: GameObject) {
         if (obj.transform.x < 0 || obj.transform.x > windowSizeX) {
@@ -334,38 +284,10 @@ class GameView(
         activity.finish()
     }
 
-    //TODO udělat pro time a alcohol to samé
-//    private fun alcoholBorderCollision() {
-//        for (FlyingObject in alcoholObjectManager.objects) {
-//            borderCollision(FlyingObject as GameObject)
-//        }
-//    }
-
     private fun flyingObjBorderCollision(list: MutableList<GameObjectPredecesor>) {
         for (FlyingObject in list) {
             borderCollision(FlyingObject as GameObject)
         }
     }
 
-//    private fun timeBorderCollision() {
-//        for (FlyingObject in timeObjectManager.objects) {
-//            borderCollision(FlyingObject as GameObject)
-//        }
-//    }
-
-    private fun drunkInfluence() {
-        var dx = (-drunkMovement..drunkMovement).random().toFloat()
-        dx *= drunkness
-
-        var dy = (-drunkMovement..drunkMovement).random().toFloat()
-        dy *= drunkness
-
-        ax += dx
-        ay += dy
-    }
-
-    private fun showCharacter() {
-        //TODO zobrazení že hráč může dojít ke stolu
-
-    }
 }
