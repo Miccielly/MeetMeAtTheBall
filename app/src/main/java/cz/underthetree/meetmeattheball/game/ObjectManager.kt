@@ -7,7 +7,7 @@ import cz.underthetree.meetmeattheball.utils.Vector2
 import kotlin.reflect.typeOf
 
 //Vytváří objekty a pokládá je do prostoru
-class ObjectManager(
+open class ObjectManager(
     val objectPrefab: GameObjectPredecesor,
     val objectCount: Int,
     val screenRatio: Vector2,
@@ -16,14 +16,7 @@ class ObjectManager(
 
     val objects: MutableList<GameObjectPredecesor> = arrayListOf()
 
-    //TODO podle počtu objektů rozdělit rovnoměrně počet objektů které volají jednotlivé charaktery + změnit obrázek k nim
-    init {
-        makeObjects()   //vytvoří list kopií prefabObject
-        placeObjects()  //rozmístí objekty po obrazovce
-    }
-
-    fun placeObjects() {
-
+    open fun placeObjects() {
         objects.forEach { gameObject ->
             gameObject.setPosition(
                 (0..objectPrefab.windowSize.x).random().toFloat(),
@@ -93,5 +86,11 @@ class ObjectManager(
 //        obj.extrasValue = (0..2).random()
         Log.i("extrasValue", obj.extrasValue.toString())
         return obj
+    }
+
+    fun makeAndPlaceObjects()
+    {
+        makeObjects()
+        placeObjects()
     }
 }

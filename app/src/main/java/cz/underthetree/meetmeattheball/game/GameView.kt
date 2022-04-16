@@ -9,7 +9,6 @@ import android.view.SurfaceView
 import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
 import cz.underthetree.meetmeattheball.WalkingActivity
-import cz.underthetree.meetmeattheball.utils.Accelerometer
 import cz.underthetree.meetmeattheball.utils.GameObjectPredecesor
 import cz.underthetree.meetmeattheball.utils.Vector2
 
@@ -41,7 +40,7 @@ class GameView(
     private var controls: Controls = Controls(this.context) //hnedka instancujeme Controls
 
     //GAME OBJECTS
-    private var tableManager: ObjectManager
+    private var tableManager: TableObjectManager
     private var alcoholObjectManager: ObjectManager
     private var timeObjectManager: ObjectManager
 
@@ -96,11 +95,16 @@ class GameView(
         )
 
         //SET POSITIONS
-        player.setPosition(500 * screenRatioX, 200 * screenRatioY)
+        player.setPosition(windowSizeX/2f, windowSizeY/2f)
 
-        tableManager = ObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false)
+        tableManager = TableObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false, player)
+        tableManager.placeObjects()
+
         alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
+        alcoholObjectManager.makeAndPlaceObjects()
+
         timeObjectManager = ObjectManager(time, 8, Vector2(screenRatioX, screenRatioY), true)
+        timeObjectManager.makeAndPlaceObjects()
 
         character.setPosition(
             table.transform.x,
@@ -153,7 +157,7 @@ class GameView(
             if (collectedTime >= maxCollectedTime)
                 character.draw(canvas)
 
-            tableManager.drawObjects(canvas)
+            table.draw(canvas)
 
             alcoholObjectManager.drawObjects(canvas)
             timeObjectManager.drawObjects(canvas)
