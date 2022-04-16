@@ -11,7 +11,7 @@ interface GameObjectPredecesor {
     val windowSize: Point
     val res: Resources
     val drawable: Int
-    val sizeRelativeToScreen: Float
+    val sizeRelativeToScreen: Vector2
     val paint: Paint
     var bitmap: Bitmap   //obrázek objektu
     var transform: Vector2

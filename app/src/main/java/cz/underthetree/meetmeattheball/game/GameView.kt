@@ -61,12 +61,12 @@ class GameView(
         //Instantiate objects
         background = Background(windowSizeX, windowSizeY, resources)
         player =
-            GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, .1f, paint)
+            GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, Vector2(.1f, .1f), paint)
         table = GameObject(
             Point(windowSizeX, windowSizeY),
             resources,
             R.drawable.tablewhite,
-            .2f,
+            Vector2(.2f,.2f),
             paint
         )
 
@@ -82,15 +82,15 @@ class GameView(
             Point(windowSizeX, windowSizeY),
             resources,
             charPicture,
-            .2f,
+            Vector2(.175f, .325f),
             paint
         )
         alcohol = FlyingObject(
-            Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, .15f, paint,
+            Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, Vector2(.15f,.15f), paint,
             Vector2()
         )
         time = FlyingObject(
-            Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, .075f, paint,
+            Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, Vector2(.075f, .075f), paint,
             Vector2()
         )
 
@@ -108,7 +108,7 @@ class GameView(
 
         character.setPosition(
             table.transform.x,
-            table.transform.y - 50 * screenRatioY
+            table.transform.y - 130 * screenRatioY
         ) //ikdyž je table v objectManager má jen jeden objekt tudíž k němu patří jen jeden charakter
 
     }
@@ -154,7 +154,7 @@ class GameView(
                 paint
             )
 
-            if (collectedTime >= maxCollectedTime)
+//            if (collectedTime >= maxCollectedTime)
                 character.draw(canvas)
 
             table.draw(canvas)

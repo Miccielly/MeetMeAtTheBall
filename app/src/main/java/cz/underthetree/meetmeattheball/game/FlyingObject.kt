@@ -11,7 +11,7 @@ class FlyingObject(
     windowSize: Point?,
     res: Resources?,
     drawable: Int,
-    sizeRelativeToScreen: Float,
+    sizeRelativeToScreen: Vector2,
     paint: Paint?,
     mov: Vector2,
 ) : GameObject(windowSize!!, res!!, drawable, sizeRelativeToScreen, paint!!) {

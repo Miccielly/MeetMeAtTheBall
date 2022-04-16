@@ -11,6 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import cz.underthetree.meetmeattheball.game.Character
+import cz.underthetree.meetmeattheball.utils.FileReader
+import java.io.IOException
+import java.io.InputStream
 
 class QuestionActivity : AppCompatActivity() {
 
@@ -22,7 +25,10 @@ class QuestionActivity : AppCompatActivity() {
     private var askedCount = 0; //po třech otázkách konec tázací fáze
     private var questionIndex = 0;  //výběr otázky z listu otázek
 
+    private val fileReader: FileReader = FileReader()
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        readFromAsset()
 
         if (intent.extras != null) {
             characterIndex = intent.extras!!.getInt("characterIndex")
@@ -144,5 +150,21 @@ class QuestionActivity : AppCompatActivity() {
                 ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null)
             )
         )
+    }
+
+    private fun readFromAsset() {
+        var string: String? = ""
+        try {
+            val inputStream: InputStream = assets.open("example.txt")
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            string = String(buffer)
+        } catch (e: IOException) {
+            Log.i("file", string.toString())
+            e.printStackTrace()
+        }
+
+        Log.i("file", string.toString())
     }
 }

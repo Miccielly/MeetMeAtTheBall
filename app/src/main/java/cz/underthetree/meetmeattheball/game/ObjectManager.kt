@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.util.Log
 import cz.underthetree.meetmeattheball.utils.GameObjectPredecesor
 import cz.underthetree.meetmeattheball.utils.Vector2
-import kotlin.reflect.typeOf
 
 //Vytváří objekty a pokládá je do prostoru
 open class ObjectManager(

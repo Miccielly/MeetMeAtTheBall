@@ -11,7 +11,7 @@ open class GameObject
     override val windowSize: Point,
     override val res: Resources,
     override val drawable: Int,
-    override val sizeRelativeToScreen: Float,
+    override val sizeRelativeToScreen: Vector2,
     override val paint: Paint
 ) : GameObjectPredecesor {
 
@@ -25,9 +25,8 @@ open class GameObject
 
 
     init {
-        scale.x =
-            windowSize.y * sizeRelativeToScreen //oboje je Y protože je to menší strana a chceeme stejně spíš kulaté kolize
-        scale.y = windowSize.y * sizeRelativeToScreen //
+        scale.x = windowSize.y * sizeRelativeToScreen.x //oboje je Y protože je to menší strana a chceeme stejně spíš kulaté kolize
+        scale.y = windowSize.y * sizeRelativeToScreen.y //
 
         bitmap = BitmapFactory.decodeResource(res, drawable)
         bitmap = Bitmap.createScaledBitmap(bitmap, scale.x.toInt(), scale.y.toInt(), false)

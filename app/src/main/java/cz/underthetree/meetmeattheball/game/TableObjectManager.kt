@@ -11,7 +11,6 @@ class TableObjectManager(
     flyingObjectType: Boolean,
     private val player: GameObject
 ) : ObjectManager(objectPrefab, objectCount, screenRatio, flyingObjectType) {
-    //TODO Dědit object manager a udělat omezení položení stolu, aby nebyl na hraně obrazovky a blízko hráče
 
     private val borderDistance = 100f
 
@@ -27,7 +26,7 @@ class TableObjectManager(
             val maxX = objectPrefab.windowSize.x.toFloat() - borderDistance*screenRatio.x
             pos.x = ((minX.toInt()..maxX.toInt()).random()).toFloat()
 
-            val minY = borderDistance*screenRatio.y
+            val minY = 3*borderDistance*screenRatio.y
             val maxY = objectPrefab.windowSize.y.toFloat() - borderDistance*screenRatio.y
             pos.y = ((minY.toInt()..maxY.toInt()).random()).toFloat()
 
