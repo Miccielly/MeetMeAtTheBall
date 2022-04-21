@@ -50,6 +50,7 @@ class GameView(
     //GAME VALUES
     private val drunknessLimit = .7f
     private var collectedTime = 0
+
     private val maxCollectedTime = (9..15).random()
 
     private var characterArrived = false
@@ -61,12 +62,18 @@ class GameView(
         //Instantiate objects
         background = Background(windowSizeX, windowSizeY, resources)
         player =
-            GameObject(Point(windowSizeX, windowSizeY), resources, R.drawable.greendot, Vector2(.1f, .1f), paint)
+            GameObject(
+                Point(windowSizeX, windowSizeY),
+                resources,
+                R.drawable.greendot,
+                Vector2(.1f, .1f),
+                paint
+            )
         table = GameObject(
             Point(windowSizeX, windowSizeY),
             resources,
             R.drawable.tablewhite,
-            Vector2(.2f,.2f),
+            Vector2(.2f, .2f),
             paint
         )
 
@@ -86,18 +93,27 @@ class GameView(
             paint
         )
         alcohol = FlyingObject(
-            Point(windowSizeX, windowSizeY), resources, R.drawable.alcohol, Vector2(.15f,.15f), paint,
+            Point(windowSizeX, windowSizeY),
+            resources,
+            R.drawable.alcohol,
+            Vector2(.15f, .15f),
+            paint,
             Vector2()
         )
         time = FlyingObject(
-            Point(windowSizeX, windowSizeY), resources, R.drawable.bluedot, Vector2(.075f, .075f), paint,
+            Point(windowSizeX, windowSizeY),
+            resources,
+            R.drawable.bluedot,
+            Vector2(.075f, .075f),
+            paint,
             Vector2()
         )
 
         //SET POSITIONS
-        player.setPosition(windowSizeX/2f, windowSizeY/2f)
+        player.setPosition(windowSizeX / 2f, windowSizeY / 2f)
 
-        tableManager = TableObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false, player)
+        tableManager =
+            TableObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false, player)
         tableManager.placeObjects()
 
         alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
@@ -154,7 +170,7 @@ class GameView(
                 paint
             )
 
-            if (collectedTime >= maxCollectedTime)
+            if (characterArrived)
                 character.draw(canvas)
 
             table.draw(canvas)
@@ -181,7 +197,10 @@ class GameView(
         resetFlyingObjectCollisions(timeObjectManager.objects)
 
         controls.movement(player)  //ovládání pohybu hráče
-        player.addPosition(player.movement.x * screenRatioX, player.movement.y * screenRatioY)  //přidání pozice o aktuální movement hráče normovaný na velikost obrazovky
+        player.addPosition(
+            player.movement.x * screenRatioX,
+            player.movement.y * screenRatioY
+        )  //přidání pozice o aktuální movement hráče normovaný na velikost obrazovky
 
         borderCollision(player) //narazil objekt hráče do hrany obrazovky?
     }
@@ -193,13 +212,13 @@ class GameView(
     private fun tableCollisions(): Boolean {
         var col = false
 
-        for (GameObject in tableManager.objects) {
-            if (collectedTime >= maxCollectedTime && player.checkColision(GameObject as GameObject)) {
-                col = true
-                showQuestion(GameObject)
-                return col  //stačí jeden stůl nemusíme projíždět jestli tu je další
-            }
+        if (collectedTime >= maxCollectedTime && player.checkColision(table)) {
+            col = true
+            Log.i("Table", "col")
+            showQuestion(table)
+            return col  //stačí jeden stůl nemusíme projíždět jestli tu je další
         }
+
         return col
     }
 
@@ -246,8 +265,6 @@ class GameView(
                         characterArrived = true
                 }
                 Log.i("collectedTime", collectedTime.toString());
-                Log.i("collidedReset", "false")
-
             }
         }
     }
