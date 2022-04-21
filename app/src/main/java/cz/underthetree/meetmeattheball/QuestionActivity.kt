@@ -20,7 +20,8 @@ class QuestionActivity : AppCompatActivity() {
     private lateinit var textView: TextView
 
     private lateinit var imageView: ImageView
-    private lateinit var characters: MutableList<Character>
+    private lateinit var chosenCharacter: Character
+
     private var characterIndex = (0..2).random(); //výběr z listu charakterů
     private var askedCount = 0; //po třech otázkách konec tázací fáze
     private var questionIndex = 0;  //výběr otázky z listu otázek
@@ -42,12 +43,10 @@ class QuestionActivity : AppCompatActivity() {
 
         imageView.setBackgroundColor(Color.CYAN)
 
-//        imageView.background = characters[characterIndex].characterImage
-        imageView.background = characters[0].characterImage
+        imageView.background = chosenCharacter.characterImage
         //PŘIDÁNÍ LISTENERŮ
         val btn = findViewById(R.id.nextBtn) as Button
         btn.findViewById<Button>(R.id.nextBtn).setOnClickListener {
-            //countMe();
             newQuestion()
         }
 
@@ -64,28 +63,12 @@ class QuestionActivity : AppCompatActivity() {
         Log.i("nextBtnBefore", textView.text.toString())
 
         if (askedCount > 2) {
-            /*askedCount = 0
-            var newCharacterIndex = 0
-            do {
-                newCharacterIndex = (0..2).random()
-            } while (newCharacterIndex == characterIndex)
-
-            characterIndex = newCharacterIndex
-
-            print(characterIndex)
-*/
-            //zavolat WalkingActivity
-
             startActivity(Intent(this, WalkingActivity::class.java))
             this.finish()   //jako mohli bychom to nechat otevřené, ale přepínat pak mezi už otevřenými aktivitami zatím neumím
             return
         }
-        val questions =
-//            characters[characterIndex].questions    //výběr charakteru, z kterého vybíráme otázky
-//        imageView.background = characters[characterIndex].characterImage
-
-        characters[0].questions    //výběr charakteru, z kterého vybíráme otázky
-        imageView.background = characters[0].characterImage
+        val questions = chosenCharacter.questions    //výběr charakteru, z kterého vybíráme otázky
+        imageView.background = chosenCharacter.characterImage
 
         //vybrání nového indexu
         var newIndex = 0;
@@ -111,32 +94,25 @@ class QuestionActivity : AppCompatActivity() {
 
 
     private fun initCharacters() {
-
-        characters = mutableListOf()
-
         when(characterIndex){
-            0 -> characters.add(Character(
+            0 -> chosenCharacter = (Character(
                 fileReader.readFromAsset("psycholog.txt"),
                 "Jan",
                 "Typical psychologist, nothing special nor extra. Still quite chill to chill with him.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_psycholog, null)
             ))
-            1 -> characters.add( Character(
+            1 -> chosenCharacter =( Character(
                 fileReader.readFromAsset("kuchar.txt"),
                 "Giovani",
                 "Would eat anything and post review of it on his instagram story.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_kuchar, null)
             ))
-            2 -> characters.add(Character(
+            2 -> chosenCharacter =(Character(
                 fileReader.readFromAsset("cestovatel.txt"),
                 "Terrence",
                 "His instagram looks like one man travel agency, he's on his way to another country you didn't even know exists.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null)
             ))
         }
-
     }
-
-
-
 }
