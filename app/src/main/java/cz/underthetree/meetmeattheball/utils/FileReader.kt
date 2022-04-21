@@ -1,33 +1,37 @@
 package cz.underthetree.meetmeattheball.utils
 
+import android.app.Activity
+import android.util.Log
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-class FileReader {
+class FileReader(val activity: Activity) {
 
-    fun read() {
+    lateinit var questions: MutableList<String>
 
-        val inputStream: InputStream = File("example.txt").inputStream()
-        val lineList = mutableListOf<String>()
-
-//        val is = assets.open
-
-        inputStream.bufferedReader().forEachLine { lineList.add(it) }
-        lineList.forEach { println(">  " + it) }
-    }
-
-    fun write() {
-        val outputStream: OutputStream = File("bruh.txt").outputStream()
-
-        outputStream.bufferedWriter().use { out ->
-            out.write("sheesh")
-
+    fun readFromAsset(fileName: String): MutableList<String> {
+        var string: String? = ""
+        try {
+            val inputStream: InputStream = activity.assets.open(fileName)
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            string = String(buffer)
+        } catch (e: IOException) {
+            Log.i("file", string.toString())
+            e.printStackTrace()
         }
+        if (string != null) {
+            questions = string.split("/").toMutableList()
+
+            for(question in questions)
+                Log.i("file", question.toString())
+        }
+
+        return questions
+
     }
-
-    //read file myText.txt from assets folder
-
 
 }

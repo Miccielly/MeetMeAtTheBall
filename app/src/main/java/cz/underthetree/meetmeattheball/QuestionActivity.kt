@@ -25,10 +25,10 @@ class QuestionActivity : AppCompatActivity() {
     private var askedCount = 0; //po třech otázkách konec tázací fáze
     private var questionIndex = 0;  //výběr otázky z listu otázek
 
-    private val fileReader: FileReader = FileReader()
+    private val fileReader: FileReader = FileReader(this)
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        readFromAsset()
+        fileReader.readFromAsset("example.txt")
 
         if (intent.extras != null) {
             characterIndex = intent.extras!!.getInt("characterIndex")
@@ -102,7 +102,6 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun backToMenu() {
-//        textView.text = "BackToMenu"
         val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
         startActivity(switchActivityIntent)
         this.finish()
@@ -110,6 +109,7 @@ class QuestionActivity : AppCompatActivity() {
 
 
     private fun initCharacters() {
+        /*
         val questionsGeneral = listOf<String>(
             "How are you today?",
             "What are your plans for this day?",
@@ -127,44 +127,30 @@ class QuestionActivity : AppCompatActivity() {
             "Have you ever been in other continents than Europe?",
             "What languages do you know?"
         )
-
+*/
         characters = mutableListOf(
             Character(
-                questionsGeneral,
+                fileReader.readFromAsset("psycholog.txt"),
                 "Jan",
-                "Typical dude you see everywhere, nothing special nor extra. Still quite chill to chill with him.",
+                "Typical psychologist, nothing special nor extra. Still quite chill to chill with him.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_psycholog, null)
             ),
 
             Character(
-                questionsFood,
+                fileReader.readFromAsset("kuchar.txt"),
                 "Giovani",
                 "Would eat anything and post review of it on his instagram story.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_kuchar, null)
             ),
 
             Character(
-                questionsTravel,
-                "Paul",
+                fileReader.readFromAsset("cestovatel.txt"),
+                "Terrence",
                 "His instagram looks like one man travel agency, he's on his way to another country you didn't even know exists.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null)
             )
         )
     }
 
-    private fun readFromAsset() {
-        var string: String? = ""
-        try {
-            val inputStream: InputStream = assets.open("example.txt")
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            string = String(buffer)
-        } catch (e: IOException) {
-            Log.i("file", string.toString())
-            e.printStackTrace()
-        }
 
-        Log.i("file", string.toString())
-    }
 }
