@@ -25,8 +25,10 @@ class QuestionActivity : AppCompatActivity() {
     private var characterIndex = (0..2).random(); //výběr z listu charakterů
     private var askedCount = 0; //po třech otázkách konec tázací fáze
     private var questionIndex = 0;  //výběr otázky z listu otázek
+    private var askedIndexes = mutableListOf<Int>()
 
     private val fileReader: FileReader = FileReader(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (intent.extras != null) {
@@ -77,8 +79,9 @@ class QuestionActivity : AppCompatActivity() {
         //loop dokud se nenajde jiný index než co tam byl minule
         do {
             newIndex = (0..questions.size - 1).random()
-        } while (newIndex == questionIndex)
-        questionIndex = newIndex;
+        } while (alreadyUsedQuestion(newIndex))
+        questionIndex = newIndex
+        askedIndexes.add(questionIndex) // přidat index mezi použité indexy
 
         textView.text = questions[questionIndex]    //přiřazení strigu do textového pole
         Log.i("nextBtnAfter", questionIndex.toString())
@@ -86,12 +89,24 @@ class QuestionActivity : AppCompatActivity() {
         askedCount++
     }
 
+    private fun alreadyUsedQuestion(newIndex: Int): Boolean
+    {
+        var alreadyUsed = false
+        for(index in askedIndexes)
+        {
+            alreadyUsed = index == newIndex
+
+            if(alreadyUsed)
+                return true //pokud je jeden true ukončíme metodu
+        }
+        return false    //nenašel se index se stejnou hodnotou mezi použitými
+    }
+
     private fun backToMenu() {
         val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
         startActivity(switchActivityIntent)
         this.finish()
     }
-
 
     private fun initCharacters() {
         when(characterIndex){
