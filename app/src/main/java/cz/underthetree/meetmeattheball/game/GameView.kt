@@ -56,6 +56,8 @@ class GameView(
     private var characterArrived = false
     private var tableCollision = false
 
+
+    //TODO přidat dva "stat bary" jeden na opilost a druhý na čas (velikostí se bude naplňovat
     init {
         paint = Paint()
 
