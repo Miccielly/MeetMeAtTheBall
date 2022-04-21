@@ -154,7 +154,7 @@ class GameView(
                 paint
             )
 
-//            if (collectedTime >= maxCollectedTime)
+            if (collectedTime >= maxCollectedTime)
                 character.draw(canvas)
 
             table.draw(canvas)

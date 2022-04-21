@@ -28,8 +28,6 @@ class QuestionActivity : AppCompatActivity() {
     private val fileReader: FileReader = FileReader(this)
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        fileReader.readFromAsset("example.txt")
-
         if (intent.extras != null) {
             characterIndex = intent.extras!!.getInt("characterIndex")
         }
@@ -44,7 +42,8 @@ class QuestionActivity : AppCompatActivity() {
 
         imageView.setBackgroundColor(Color.CYAN)
 
-        imageView.background = characters[characterIndex].characterImage
+//        imageView.background = characters[characterIndex].characterImage
+        imageView.background = characters[0].characterImage
         //PŘIDÁNÍ LISTENERŮ
         val btn = findViewById(R.id.nextBtn) as Button
         btn.findViewById<Button>(R.id.nextBtn).setOnClickListener {
@@ -65,7 +64,7 @@ class QuestionActivity : AppCompatActivity() {
         Log.i("nextBtnBefore", textView.text.toString())
 
         if (askedCount > 2) {
-            askedCount = 0
+            /*askedCount = 0
             var newCharacterIndex = 0
             do {
                 newCharacterIndex = (0..2).random()
@@ -74,7 +73,7 @@ class QuestionActivity : AppCompatActivity() {
             characterIndex = newCharacterIndex
 
             print(characterIndex)
-
+*/
             //zavolat WalkingActivity
 
             startActivity(Intent(this, WalkingActivity::class.java))
@@ -82,8 +81,11 @@ class QuestionActivity : AppCompatActivity() {
             return
         }
         val questions =
-            characters[characterIndex].questions    //výběr charakteru, z kterého vybíráme otázky
-        imageView.background = characters[characterIndex].characterImage
+//            characters[characterIndex].questions    //výběr charakteru, z kterého vybíráme otázky
+//        imageView.background = characters[characterIndex].characterImage
+
+        characters[0].questions    //výběr charakteru, z kterého vybíráme otázky
+        imageView.background = characters[0].characterImage
 
         //vybrání nového indexu
         var newIndex = 0;
@@ -109,48 +111,32 @@ class QuestionActivity : AppCompatActivity() {
 
 
     private fun initCharacters() {
-        /*
-        val questionsGeneral = listOf<String>(
-            "How are you today?",
-            "What are your plans for this day?",
-            "What major are you studying here?"
-        )
 
-        val questionsFood = listOf<String>(
-            "What is best food you could recommend me?",
-            "What did you have for breakfast?",
-            "What food would you both eat and enjoy it?"
-        )
+        characters = mutableListOf()
 
-        val questionsTravel = listOf<String>(
-            "What unknown destiantions do you guys know?",
-            "Have you ever been in other continents than Europe?",
-            "What languages do you know?"
-        )
-*/
-        characters = mutableListOf(
-            Character(
+        when(characterIndex){
+            0 -> characters.add(Character(
                 fileReader.readFromAsset("psycholog.txt"),
                 "Jan",
                 "Typical psychologist, nothing special nor extra. Still quite chill to chill with him.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_psycholog, null)
-            ),
-
-            Character(
+            ))
+            1 -> characters.add( Character(
                 fileReader.readFromAsset("kuchar.txt"),
                 "Giovani",
                 "Would eat anything and post review of it on his instagram story.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_kuchar, null)
-            ),
-
-            Character(
+            ))
+            2 -> characters.add(Character(
                 fileReader.readFromAsset("cestovatel.txt"),
                 "Terrence",
                 "His instagram looks like one man travel agency, he's on his way to another country you didn't even know exists.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null)
-            )
-        )
+            ))
+        }
+
     }
+
 
 
 }
