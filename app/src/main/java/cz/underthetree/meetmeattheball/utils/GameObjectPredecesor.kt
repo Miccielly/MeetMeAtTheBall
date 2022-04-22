@@ -21,7 +21,11 @@ interface GameObjectPredecesor {
     var extrasValue: Int
 
     fun setPosition(x: Float, y: Float)
+    fun setPosition(position: Vector2)
+
     fun addPosition(x: Float, y: Float)
+
+    fun setScale(x: Float, y: Float)
 
     open fun update(screenRatio: Vector2)
     fun draw(canvas: Canvas)

@@ -34,6 +34,10 @@ open class GameObject
         setPosition(0f, 0f)  //kvůli přepočtu souřadnic
     }
 
+    override fun setPosition(position: Vector2) {
+        setPosition(position.x, position.y)
+    }
+
     override fun setPosition(x: Float, y: Float) {
         transform.x = x
         transform.y = y
@@ -71,11 +75,22 @@ open class GameObject
 
     }
 
-
-
     override fun update(screenRatio :Vector2) {
         Log.i("update:", "old")
     }
 
+    override fun setScale(x: Float, y: Float) {
+        if(x < 1 || y < 1) {
+            scale.x = 1f
+            scale.y = 1f
+        }
+        else {
+            scale.x = x
+            scale.y = y
+        }
+
+        bitmap = Bitmap.createScaledBitmap(bitmap, scale.x.toInt(), scale.y.toInt(), false)
+
+    }
 
 }

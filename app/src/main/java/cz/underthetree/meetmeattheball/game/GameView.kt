@@ -29,6 +29,7 @@ class GameView(
     private val screenRatioX: Float = windowSizeX / 1920f
     private val screenRatioY: Float = windowSizeY / 1080f
 
+    //GAME OBJECTS
     private val background: Background //pouze obrázek co stojí
     private var player: GameObject //objekt s kterým se pohybuje
     private var table: GameObject //objekt který reprezentuje stůl ke kterému se má hráč dostat
@@ -36,10 +37,13 @@ class GameView(
     private var alcohol: FlyingObject //objekt s kterým se pohybuje
     private var time: FlyingObject //objekt s kterým se pohybuje
 
+    //UI GAME OBJECTS
+    private var timeBar: FillBar
+
     //Controls
     private var controls: Controls = Controls(this.context) //hnedka instancujeme Controls
 
-    //GAME OBJECTS
+    //GAME OBJECTS MANAGERS
     private var tableManager: TableObjectManager
     private var alcoholObjectManager: ObjectManager
     private var timeObjectManager: ObjectManager
@@ -111,12 +115,24 @@ class GameView(
             Vector2()
         )
 
+        timeBar = FillBar(
+            GameObject(
+                Point(windowSizeX, windowSizeY),
+                resources,
+                R.drawable.bluedot,
+                Vector2(0.2f, 0.025f),
+                paint
+            ), R.drawable.reddot, maxCollectedTime
+        )
+
         //SET POSITIONS
         player.setPosition(windowSizeX / 2f, windowSizeY / 2f)
 
         tableManager =
             TableObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false, player)
         tableManager.placeObjects()
+
+        timeBar.setPosition(table.transform.x, table.transform.y - 75 * screenRatioY)
 
         alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
         alcoholObjectManager.makeAndPlaceObjects()
@@ -180,6 +196,9 @@ class GameView(
             alcoholObjectManager.drawObjects(canvas)
             timeObjectManager.drawObjects(canvas)
             player.draw(canvas)
+
+            if(!characterArrived)
+                timeBar.draw(canvas)
 
             holder.unlockCanvasAndPost(canvas)
         }
@@ -261,7 +280,7 @@ class GameView(
                 if (!obj.collided) {
                     obj.collided = true
                     collectedTime++
-
+                    timeBar.addValue()
                     //posbírán všechen potřebný čas?
                     if (collectedTime >= maxCollectedTime)
                         characterArrived = true
