@@ -39,6 +39,7 @@ class GameView(
 
     //UI GAME OBJECTS
     private var timeBar: FillBar
+    private var drunkbar: FillBar
 
     //Controls
     private var controls: Controls = Controls(this.context) //hnedka instancujeme Controls
@@ -119,10 +120,20 @@ class GameView(
             GameObject(
                 Point(windowSizeX, windowSizeY),
                 resources,
-                R.drawable.bluedot,
+                R.drawable.greendot,
                 Vector2(0.2f, 0.025f),
                 paint
             ), R.drawable.reddot, maxCollectedTime
+        )
+
+        drunkbar = FillBar(
+            GameObject(
+                Point(windowSizeX, windowSizeY),
+                resources,
+                R.drawable.reddot,
+                Vector2(0.2f, 0.025f),
+                paint
+            ), R.drawable.greendot, maxCollectedTime
         )
 
         //SET POSITIONS
@@ -132,7 +143,8 @@ class GameView(
             TableObjectManager(table, 1, Vector2(screenRatioX, screenRatioY), false, player)
         tableManager.placeObjects()
 
-        timeBar.setPosition(table.transform.x, table.transform.y - 75 * screenRatioY)
+        timeBar.setPosition(table.transform.x, table.transform.y - 75f * screenRatioY)
+        drunkbar.setPosition(player.transform.x, player.transform.y - 70f * screenRatioY)
 
         alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
         alcoholObjectManager.makeAndPlaceObjects()
@@ -197,7 +209,9 @@ class GameView(
             timeObjectManager.drawObjects(canvas)
             player.draw(canvas)
 
-            if(!characterArrived)
+            drunkbar.draw(canvas)
+
+            if (!characterArrived)
                 timeBar.draw(canvas)
 
             holder.unlockCanvasAndPost(canvas)
@@ -217,11 +231,14 @@ class GameView(
         timeCollisions()    //střet s objektem času?
         resetFlyingObjectCollisions(timeObjectManager.objects)
 
+        drunkbar.setPosition(player.transform.x, player.transform.y - 70f * screenRatioY)
+
         controls.movement(player)  //ovládání pohybu hráče
         player.addPosition(
             player.movement.x * screenRatioX,
             player.movement.y * screenRatioY
         )  //přidání pozice o aktuální movement hráče normovaný na velikost obrazovky
+
 
         borderCollision(player) //narazil objekt hráče do hrany obrazovky?
     }
@@ -256,6 +273,7 @@ class GameView(
                 if (!obj.collided) {
                     if (controls.drunkness < drunknessLimit) {
                         controls.drunkness += 0.05f
+                        drunkbar.addValue()
                         obj.collided = true
                         Log.i("collision", obj.collided.toString());
 
