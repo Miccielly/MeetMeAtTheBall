@@ -67,7 +67,7 @@ class GameView(
         paint = Paint()
 
         //Instantiate objects
-        background = Background(windowSizeX, windowSizeY, resources)
+        background = Background(windowSizeX, windowSizeY, resources, R.drawable.background_walking)
         player =
             GameObject(
                 Point(windowSizeX, windowSizeY),

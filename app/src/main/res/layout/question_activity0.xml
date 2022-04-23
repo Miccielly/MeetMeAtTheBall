@@ -5,7 +5,7 @@
     android:id="@+id/question_activity0"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/yellow"
+    android:background="@drawable/background_talking"
     tools:context=".QuestionActivity">
 
     <TextView
@@ -51,17 +51,19 @@
         android:layout_marginStart="130dp"
         android:layout_marginEnd="130dp"
         android:layout_marginBottom="50dp"
+        android:background="@drawable/button_next"
+        android:backgroundTintMode="multiply"
         android:text="Next"
-        app:backgroundTint="@color/green"
-        android:textColor="@android:color/black"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/pauseMenuBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="96dp"
+        android:layout_height="35dp"
+        android:background="@drawable/button_general"
         android:text="Pause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
