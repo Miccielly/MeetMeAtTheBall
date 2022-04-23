@@ -72,7 +72,7 @@ class GameView(
             GameObject(
                 Point(windowSizeX, windowSizeY),
                 resources,
-                R.drawable.greendot,
+                R.drawable.player_couple,
                 Vector2(.1f, .1f),
                 paint
             )
@@ -110,7 +110,7 @@ class GameView(
         time = FlyingObject(
             Point(windowSizeX, windowSizeY),
             resources,
-            R.drawable.bluedot,
+            R.drawable.time,
             Vector2(.075f, .075f),
             paint,
             Vector2()
@@ -120,20 +120,20 @@ class GameView(
             GameObject(
                 Point(windowSizeX, windowSizeY),
                 resources,
-                R.drawable.greendot,
+                R.drawable.fillbar_yellow_bland,
                 Vector2(0.2f, 0.025f),
                 paint
-            ), R.drawable.reddot, maxCollectedTime
+            ), R.drawable.fillbar_grey, maxCollectedTime
         )
 
         drunkbar = FillBar(
             GameObject(
                 Point(windowSizeX, windowSizeY),
                 resources,
-                R.drawable.reddot,
+                R.drawable.fillbar_red,
                 Vector2(0.2f, 0.025f),
                 paint
-            ), R.drawable.greendot, maxCollectedTime
+            ), R.drawable.fillbar_grey, maxCollectedTime
         )
 
         //SET POSITIONS
