@@ -90,14 +90,14 @@ class MainMenuActivity: AppCompatActivity() {
         //val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         val switchActivityIntent = Intent(this, WalkingActivity::class.java)
         startActivity(switchActivityIntent)
-        this.finish()
+//        this.finish()
     }
 
     private fun question()
     {
         val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         startActivity(switchActivityIntent)
-        this.finish()
+//        this.finish()
     }
 
     private fun quit()

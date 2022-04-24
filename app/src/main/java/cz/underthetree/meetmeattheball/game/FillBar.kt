@@ -5,7 +5,7 @@ import android.util.Log
 import cz.underthetree.meetmeattheball.utils.Vector2
 import kotlinx.coroutines.flow.callbackFlow
 
-class FillBar(private val sliderObj: GameObject, val backgroundImage: Int, val maxValue: Int) {
+class FillBar(private val sliderObj: GameObject, val backgroundImage: Int, val maxValue: Float) {
 
     private val sliderBackground = GameObject(
         sliderObj.windowSize,
@@ -37,16 +37,16 @@ class FillBar(private val sliderObj: GameObject, val backgroundImage: Int, val m
         sliderBackground.setPosition(x, y)
     }
 
-    fun addValue() {
+    fun setValue(v: Float) {
         if (value >= maxValue)
             return
 
-        value++
+        value = v
         update()
     }
 
     fun update() {
-        val sizeX = (sliderBackground.scale.x * .8f) * (value / maxValue).toFloat()
+        val sizeX = (sliderBackground.scale.x * .8f) * (value / maxValue)   //velikost * procento naplnění
         sliderObj.setScale(sizeX, sliderBackground.scale.y * .8f)
     }
 

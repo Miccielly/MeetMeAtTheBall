@@ -16,4 +16,9 @@ Who is your cooking idol?/
 Do you like bigger or smaller portions?/
 Do you like cooking under pressure that you can't mess up?/
 Would you like to have your own restaurant and what type?/
-Would you recommend cooking to your children?
+Would you recommend cooking to your children?/
+What is your favourite alcohol?/
+What be specific on food you order in pizzeria?/
+What food you want to try?/
+Do you like sweet or salty food more?/
+What is your opinion on straws?

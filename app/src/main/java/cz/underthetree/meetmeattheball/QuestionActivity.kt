@@ -15,16 +15,19 @@ import cz.underthetree.meetmeattheball.utils.FileReader
 
 class QuestionActivity : AppCompatActivity() {
 
+    //TODO PŘEDĚLAT OBRÁZEK NEXT TLAČÍTKA
     private lateinit var myApp: MyApp
 
     private lateinit var textView: TextView
+    private lateinit var nextBtn: Button
 
     private lateinit var imageView: ImageView
     private lateinit var chosenCharacter: Character
 
     private var characterIndex = (0..2).random(); //výběr z listu charakterů
-    private var askedCount = 0; //po třech otázkách konec tázací fáze
-    private var questionIndex = 0;  //výběr otázky z listu otázek
+    private var askedCount = 0 //po třech otázkách konec tázací fáze
+    private var maxAskedCount = 2
+    private var questionIndex = 0  //výběr otázky z listu otázek
     private var askedIndexes = mutableListOf<Int>()
 
     private val fileReader: FileReader = FileReader(this)
@@ -32,12 +35,15 @@ class QuestionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         myApp = applicationContext as MyApp
-        myApp.talkingCounter++
-        Log.i("globalClass",myApp.talkingCounter.toString())
 
         if (intent.extras != null) {
             characterIndex = intent.extras!!.getInt("characterIndex")
         }
+
+        if(characterIndex != 3)
+            myApp.talkingCounter++  //přičtení počítadla zobrazených obrazovek otázky
+
+        Log.i("globalClass",myApp.talkingCounter.toString())
 
         //TODO nevytvářet vždy novou scénu jen změnit index charakteru na pozadí
         super.onCreate(savedInstanceState)
@@ -45,6 +51,7 @@ class QuestionActivity : AppCompatActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         textView = findViewById(R.id.textView)
         imageView = findViewById(R.id.imageView)
+        nextBtn = findViewById(R.id.nextBtn)
         initCharacters()
 
         imageView.setBackgroundColor(Color.CYAN)
@@ -68,7 +75,15 @@ class QuestionActivity : AppCompatActivity() {
         Log.i("nextBtnBefore", questionIndex.toString())
         Log.i("nextBtnBefore", textView.text.toString())
 
-        if (askedCount > 2) {
+        //už byly položeny tři otázky?
+        if (askedCount > maxAskedCount) {
+            //pokud už jsme u třetí obrazovky tázání tak vypnout hru
+            if(myApp.talkingCounter >= 3)
+            {
+                //TODO přidat obrazovku ukončení
+                this.finish()
+                return
+            }
             startActivity(Intent(this, WalkingActivity::class.java))
             this.finish()   //jako mohli bychom to nechat otevřené, ale přepínat pak mezi už otevřenými aktivitami zatím neumím
             return
@@ -91,6 +106,7 @@ class QuestionActivity : AppCompatActivity() {
         Log.i("nextBtnAfter", questionIndex.toString())
         Log.i("nextBtnAfter", textView.text.toString())
         askedCount++
+        updateNextButtonText()
     }
 
     private fun alreadyUsedQuestion(newIndex: Int): Boolean
@@ -107,9 +123,17 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun backToMenu() {
-        val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
-        startActivity(switchActivityIntent)
+//        val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
+//        startActivity(switchActivityIntent)
         this.finish()
+    }
+
+    private fun updateNextButtonText() {
+        if (askedCount > maxAskedCount) {
+            nextBtn.text = "See you soon"
+            return
+        }
+        nextBtn.text = ("Next (${3-askedCount})")
     }
 
     private fun initCharacters() {
@@ -131,6 +155,12 @@ class QuestionActivity : AppCompatActivity() {
                 "Terrence",
                 "His instagram looks like one man travel agency, he's on his way to another country you didn't even know exists.",
                 ResourcesCompat.getDrawable(resources, R.drawable.c_cestovatel, null)
+            ))
+            3 -> chosenCharacter =(Character(
+                fileReader.readFromAsset("zachod.txt"),
+                "Tony Seen It All",
+                "The one guy you don't think about much but meeting him always makes you feel at home.",
+                ResourcesCompat.getDrawable(resources, R.drawable.c_zachod, null)
             ))
         }
     }

@@ -123,7 +123,7 @@ class GameView(
                 R.drawable.fillbar_yellow_bland,
                 Vector2(0.2f, 0.025f),
                 paint
-            ), R.drawable.fillbar_grey, maxCollectedTime
+            ), R.drawable.fillbar_grey, maxCollectedTime.toFloat()
         )
 
         drunkbar = FillBar(
@@ -133,7 +133,7 @@ class GameView(
                 R.drawable.fillbar_red,
                 Vector2(0.2f, 0.025f),
                 paint
-            ), R.drawable.fillbar_grey, maxCollectedTime
+            ), R.drawable.fillbar_grey, drunknessLimit
         )
 
         //SET POSITIONS
@@ -273,10 +273,15 @@ class GameView(
                 if (!obj.collided) {
                     if (controls.drunkness < drunknessLimit) {
                         controls.drunkness += 0.1f
-                        drunkbar.addValue()
+                        drunkbar.setValue(controls.drunkness)
+
                         obj.collided = true
                         Log.i("collision", obj.collided.toString());
 
+                        if (controls.drunkness > drunknessLimit) {
+                            table.extrasValue = 3 //trojka je číslo záchodu
+                            showQuestion(table)
+                        }
                     } else
                         controls.drunkness = drunknessLimit
                 }
@@ -298,7 +303,7 @@ class GameView(
                 if (!obj.collided) {
                     obj.collided = true
                     collectedTime++
-                    timeBar.addValue()
+                    timeBar.setValue(collectedTime.toFloat())
                     //posbírán všechen potřebný čas?
                     if (collectedTime >= maxCollectedTime)
                         characterArrived = true
