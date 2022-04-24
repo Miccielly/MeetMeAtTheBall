@@ -272,7 +272,7 @@ class GameView(
                 //pokud ještě necollidoval přidat opilost a nastavit kolizi na true
                 if (!obj.collided) {
                     if (controls.drunkness < drunknessLimit) {
-                        controls.drunkness += 0.05f
+                        controls.drunkness += 0.1f
                         drunkbar.addValue()
                         obj.collided = true
                         Log.i("collision", obj.collided.toString());

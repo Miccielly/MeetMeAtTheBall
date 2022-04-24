@@ -12,10 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import cz.underthetree.meetmeattheball.game.Character
 import cz.underthetree.meetmeattheball.utils.FileReader
-import java.io.IOException
-import java.io.InputStream
 
 class QuestionActivity : AppCompatActivity() {
+
+    private lateinit var myApp: MyApp
 
     private lateinit var textView: TextView
 
@@ -30,6 +30,10 @@ class QuestionActivity : AppCompatActivity() {
     private val fileReader: FileReader = FileReader(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        myApp = applicationContext as MyApp
+        myApp.talkingCounter++
+        Log.i("globalClass",myApp.talkingCounter.toString())
 
         if (intent.extras != null) {
             characterIndex = intent.extras!!.getInt("characterIndex")

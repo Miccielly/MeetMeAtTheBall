@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,8 @@ import kotlin.system.exitProcess
 
 
 class MainMenuActivity: AppCompatActivity() {
+
+    private lateinit var myApp: MyApp
 
     private lateinit var gyroscope: Gyroscope
     private lateinit var accelerometer: Accelerometer
@@ -24,6 +27,12 @@ class MainMenuActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mainmenu_activity)
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+
+        myApp = applicationContext as MyApp
+        myApp.talkingCounter = 0
+
+        Log.i("globalClass",myApp.talkingCounter.toString())
 
         val playBtn = findViewById(R.id.playBtn) as Button
         playBtn.findViewById<Button>(R.id.playBtn).setOnClickListener {
