@@ -22,6 +22,7 @@ open class GameObject
     override var movement: Vector2 = Vector2()
     override var extrasValue = (0..2).random()  //natvrdo max počet charakterů
 
+    override var collided = false
 
 
     init {

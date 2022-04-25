@@ -1,6 +1,7 @@
 package cz.underthetree.meetmeattheball.game
 
 import android.content.res.Resources
+import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Point
 import android.util.Log
@@ -16,7 +17,6 @@ class FlyingObject(
     mov: Vector2,
 ) : GameObject(windowSize!!, res!!, drawable, sizeRelativeToScreen, paint!!) {
 
-    var collided = false
 
     init {
         movement.setValues(mov.x, mov.y)
@@ -25,6 +25,12 @@ class FlyingObject(
     override fun update(screenRatio: Vector2) {
         Log.i("update:", "new")
         addPosition(movement.x * screenRatio.x, movement.y * screenRatio.y)
+    }
+
+    fun drawUncollided(canvas: Canvas)
+    {
+        if(!collided)
+            super.draw(canvas)
     }
 
 }

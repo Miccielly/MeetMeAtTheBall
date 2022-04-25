@@ -34,7 +34,7 @@ open class ObjectManager(
         }
 
         //pokud máme jen jeden objekt tak se přidá pouze prefab
-        if(objectCount < 2)
+        if (objectCount < 2)
             return
 
         //přidání kopií prefabu (-2 protože první -1 je prefab a začínáme od nuly takže to je druhý -1)
@@ -55,9 +55,26 @@ open class ObjectManager(
         }
     }
 
+    fun drawObjects(canvas: Canvas, colliding: Boolean) {
+        for (GameObject in objects) {
+            if ((colliding && GameObject.collided) ||
+                (!colliding && !GameObject.collided)
+            )
+                GameObject.draw(canvas)
+        }
+    }
+
     fun updateObjects() {
         for (GameObject in objects) {
             GameObject.update(screenRatio)
+        }
+    }
+
+    //updatovat objekty pouze pokud jsou nebo nejsou v kolizi
+    fun updateObjects(colliding: Boolean) {
+        for (GameObject in objects) {
+            if ((colliding && GameObject.collided) || (!colliding && !GameObject.collided))
+                GameObject.update(screenRatio)
         }
     }
 
@@ -87,8 +104,7 @@ open class ObjectManager(
         return obj
     }
 
-    fun makeAndPlaceObjects()
-    {
+    fun makeAndPlaceObjects() {
         makeObjects()
         placeObjects()
     }

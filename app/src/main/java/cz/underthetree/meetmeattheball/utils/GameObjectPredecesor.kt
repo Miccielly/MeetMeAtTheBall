@@ -19,7 +19,7 @@ interface GameObjectPredecesor {
     var scale: Vector2
     var movement: Vector2
     var extrasValue: Int
-
+    var collided: Boolean
     fun setPosition(x: Float, y: Float)
     fun setPosition(position: Vector2)
 

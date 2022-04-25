@@ -53,10 +53,11 @@ class GameView(
     private var charPicture: Int    //obrázek který se objeví u stolu
 
     //GAME VALUES
+    private val alcoholObjectCount = 8
     private val drunknessLimit = .7f
     private var collectedTime = 0
 
-    private val maxCollectedTime = (9..15).random()
+    private val maxCollectedTime = (9..12).random()
 
     private var characterArrived = false
     private var tableCollision = false
@@ -146,10 +147,12 @@ class GameView(
         timeBar.setPosition(table.transform.x, table.transform.y - 75f * screenRatioY)
         drunkbar.setPosition(player.transform.x, player.transform.y - 70f * screenRatioY)
 
-        alcoholObjectManager = ObjectManager(alcohol, 8, Vector2(screenRatioX, screenRatioY), true)
+        alcoholObjectManager =
+            ObjectManager(alcohol, alcoholObjectCount, Vector2(screenRatioX, screenRatioY), true)
         alcoholObjectManager.makeAndPlaceObjects()
 
-        timeObjectManager = ObjectManager(time, 8, Vector2(screenRatioX, screenRatioY), true)
+        timeObjectManager =
+            ObjectManager(time, maxCollectedTime, Vector2(screenRatioX, screenRatioY), true)
         timeObjectManager.makeAndPlaceObjects()
 
         character.setPosition(
@@ -183,6 +186,32 @@ class GameView(
         controls.accelerometer.unregister()
     }
 
+
+    fun update() {
+        tableCollision = tableCollisions()
+
+        alcoholObjectManager.updateObjects()    //pohyb objektů alkoholu
+        flyingObjBorderCollision(alcoholObjectManager.objects)    //narazil alkohol do hrany obrazovky?
+        alcoholCollisions() //je alkohol v okruhu kolize?
+        resetFlyingObjectCollisions(alcoholObjectManager.objects)    //vyskočil alkohol z okruhu kolize?
+
+        timeObjectManager.updateObjects(false)    //pohyb objektů času
+        flyingObjBorderCollision(timeObjectManager.objects)    //narazil čas do hrany obrazovky?
+        timeCollisions()    //střet s objektem času?
+//        resetFlyingObjectCollisions(timeObjectManager.objects)
+
+        drunkbar.setPosition(player.transform.x, player.transform.y - 70f * screenRatioY)
+
+        controls.movement(player)  //ovládání pohybu hráče
+        player.addPosition(
+            player.movement.x * screenRatioX,
+            player.movement.y * screenRatioY
+        )  //přidání pozice o aktuální movement hráče normovaný na velikost obrazovky
+
+
+        borderCollision(player) //narazil objekt hráče do hrany obrazovky?
+    }
+
     fun draw() {
         //je možné že to nepustí přes tento if
         if (holder.surface.isValid()) {
@@ -206,7 +235,7 @@ class GameView(
             table.draw(canvas)
 
             alcoholObjectManager.drawObjects(canvas)
-            timeObjectManager.drawObjects(canvas)
+            timeObjectManager.drawObjects(canvas, false)
             player.draw(canvas)
 
             drunkbar.draw(canvas)
@@ -216,31 +245,6 @@ class GameView(
 
             holder.unlockCanvasAndPost(canvas)
         }
-    }
-
-    fun update() {
-        tableCollision = tableCollisions()
-
-        alcoholObjectManager.updateObjects()    //pohyb objektů alkoholu
-        flyingObjBorderCollision(alcoholObjectManager.objects)    //narazil alkohol do hrany obrazovky?
-        alcoholCollisions() //je alkohol v okruhu kolize?
-        resetFlyingObjectCollisions(alcoholObjectManager.objects)    //vyskočil alkohol z okruhu kolize?
-
-        timeObjectManager.updateObjects()    //pohyb objektů času
-        flyingObjBorderCollision(timeObjectManager.objects)    //narazil čas do hrany obrazovky?
-        timeCollisions()    //střet s objektem času?
-        resetFlyingObjectCollisions(timeObjectManager.objects)
-
-        drunkbar.setPosition(player.transform.x, player.transform.y - 70f * screenRatioY)
-
-        controls.movement(player)  //ovládání pohybu hráče
-        player.addPosition(
-            player.movement.x * screenRatioX,
-            player.movement.y * screenRatioY
-        )  //přidání pozice o aktuální movement hráče normovaný na velikost obrazovky
-
-
-        borderCollision(player) //narazil objekt hráče do hrany obrazovky?
     }
 
     fun sleep() {
@@ -292,14 +296,14 @@ class GameView(
 
     private fun timeCollisions() {
         for (GameObject in timeObjectManager.objects) {
-
             //je object v kolizi?
             if (player.checkColision(GameObject as GameObject)) {
 
                 //přetypování na flying object a nastavení kolize na true
                 val obj = GameObject as FlyingObject
 
-                //pokud ještě necollidoval přidat opilost a nastavit kolizi na true
+
+                //pokud ještě necollidoval přidat opilost a nastavit kolizi na true -> pokud collidoval toto vůbec nedělat, jelikož je objekt skrytý
                 if (!obj.collided) {
                     obj.collided = true
                     collectedTime++
