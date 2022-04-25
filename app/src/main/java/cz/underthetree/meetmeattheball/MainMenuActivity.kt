@@ -20,8 +20,6 @@ class MainMenuActivity: AppCompatActivity() {
     private lateinit var gyroscope: Gyroscope
     private lateinit var accelerometer: Accelerometer
 
-    private lateinit var textView: TextView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +37,9 @@ class MainMenuActivity: AppCompatActivity() {
             play()
         }
 
-        val questionBtn = findViewById(R.id.questionBtn) as Button
-        questionBtn.findViewById<Button>(R.id.questionBtn).setOnClickListener{
-            question()
+        val howToBtn = findViewById(R.id.questionBtn) as Button
+        howToBtn.findViewById<Button>(R.id.questionBtn).setOnClickListener{
+            showHowToPlay()
         }
 
         val quitBtn = findViewById(R.id.quitBtn) as Button
@@ -51,8 +49,6 @@ class MainMenuActivity: AppCompatActivity() {
 
 
 
-        //TEST MOVEMENT TEXT
-        textView = findViewById(R.id.gyroText)
 
         //GYROSCOPE CODE
         gyroscope = Gyroscope(this)
@@ -60,7 +56,6 @@ class MainMenuActivity: AppCompatActivity() {
         gyroscope.setListener { rx, ry, rz ->
             // on rotation method of gyroscope
             // set the color green if the device rotates on positive z axis
-            textView.text = rx.toString() + " | "+ ry.toString() + " | "+ rz.toString()
 
             if (rz > 1.0f) {
                 window.decorView.setBackgroundColor(Color.GREEN)
@@ -85,6 +80,8 @@ class MainMenuActivity: AppCompatActivity() {
 
     }
 
+    //TODO calling activity přes jednu metodu s parametrem class?
+
     private fun play()
     {
         //val switchActivityIntent = Intent(this, QuestionActivity::class.java)
@@ -93,7 +90,7 @@ class MainMenuActivity: AppCompatActivity() {
 //        this.finish()
     }
 
-    private fun question()
+    private fun showHowToPlay()
     {
         val switchActivityIntent = Intent(this, QuestionActivity::class.java)
         startActivity(switchActivityIntent)

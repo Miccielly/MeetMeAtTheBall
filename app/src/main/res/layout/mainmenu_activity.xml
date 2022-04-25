@@ -4,50 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainmenu_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_invitation">
 
     <Button
         android:id="@+id/playBtn"
         android:layout_width="102dp"
         android:layout_height="48dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="228dp"
+        android:layout_marginEnd="84dp"
+        android:layout_marginBottom="52dp"
         android:background="@drawable/button_general"
-        android:text="Play"
+        android:text="Accept invitation!"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/quitBtn"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/quitBtn"
         android:layout_width="90dp"
         android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginEnd="228dp"
+        android:layout_marginBottom="52dp"
         android:background="@drawable/button_general"
-        android:text="Quit"
+        android:text="I can't go, sorry"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionBtn" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/playBtn" />
 
     <TextView
-        android:id="@+id/gyroText"
-        android:layout_width="200dp"
+        android:id="@+id/invitationText"
+        android:layout_width="400dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="26dp"
-        android:text="TextView"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="166dp"
+        android:layout_marginBottom="61dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Do you want to go with me to Magic forest meeting? I have invitation for two people!"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/playBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="196dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/questionBtn"
-        android:layout_width="102dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="121dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/button_general"
-        android:text="Question"
+        android:text="How To Play?"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playBtn" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
