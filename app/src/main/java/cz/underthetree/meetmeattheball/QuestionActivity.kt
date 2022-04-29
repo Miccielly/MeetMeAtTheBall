@@ -25,8 +25,8 @@ class QuestionActivity : AppCompatActivity() {
     private lateinit var chosenCharacter: Character
 
     private var characterIndex = (0..2).random(); //výběr z listu charakterů
-    private var askedCount = 0 //po třech otázkách konec tázací fáze
-    private var maxAskedCount = 2
+    private var questionsAskedCount = 0 //po X otázkách konec tázací fáze
+    private var characterQuestionsCount = 2
     private var questionIndex = 0  //výběr otázky z listu otázek
     private var askedIndexes = mutableListOf<Int>()
 
@@ -36,14 +36,16 @@ class QuestionActivity : AppCompatActivity() {
 
         myApp = applicationContext as MyApp
 
+        characterQuestionsCount = myApp.characterQuestionsCount
+
         if (intent.extras != null) {
             characterIndex = intent.extras!!.getInt("characterIndex")
         }
 
-        if(characterIndex != 3)
-            myApp.talkingCounter++  //přičtení počítadla zobrazených obrazovek otázky
+        if(characterIndex != 3 || myApp.includeToilet)
+            myApp.characterPhaseCounter++  //přičtení počítadla zobrazených obrazovek otázky
 
-        Log.i("globalClass",myApp.talkingCounter.toString())
+        Log.i("globalClass",myApp.characterPhaseCounter.toString())
 
         //TODO nevytvářet vždy novou scénu jen změnit index charakteru na pozadí
         super.onCreate(savedInstanceState)
@@ -76,9 +78,9 @@ class QuestionActivity : AppCompatActivity() {
         Log.i("nextBtnBefore", textView.text.toString())
 
         //už byly položeny tři otázky?
-        if (askedCount > maxAskedCount) {
-            //pokud už jsme u třetí obrazovky tázání tak vypnout hru
-            if(myApp.talkingCounter >= 3)
+        if (questionsAskedCount > characterQuestionsCount) {
+            //pokud už jsme u maximálního počtu tázací fáze tak vypnout hru
+            if(myApp.characterPhaseCounter >= myApp.characterPhaseCount)
             {
                 //TODO přidat obrazovku ukončení
                 this.finish()
@@ -105,7 +107,7 @@ class QuestionActivity : AppCompatActivity() {
         textView.text = questions[questionIndex]    //přiřazení strigu do textového pole
         Log.i("nextBtnAfter", questionIndex.toString())
         Log.i("nextBtnAfter", textView.text.toString())
-        askedCount++
+        questionsAskedCount++
         updateNextButtonText()
     }
 
@@ -129,11 +131,11 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun updateNextButtonText() {
-        if (askedCount > maxAskedCount) {
+        if (questionsAskedCount > characterQuestionsCount) {
             nextBtn.text = "See you soon"
             return
         }
-        nextBtn.text = ("Next (${3-askedCount})")
+        nextBtn.text = ("Next (${3-questionsAskedCount})")
     }
 
     private fun initCharacters() {

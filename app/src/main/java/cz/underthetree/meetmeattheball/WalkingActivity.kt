@@ -11,6 +11,7 @@ import cz.underthetree.meetmeattheball.game.GameView
 class WalkingActivity : AppCompatActivity() {
 
     private lateinit var gameView: GameView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,7 +27,8 @@ class WalkingActivity : AppCompatActivity() {
 
 
 
-        gameView = GameView(this, this, displaySize.x, displaySize.y)
+        val context = applicationContext
+        gameView = GameView(context, this, displaySize.x, displaySize.y)
 
         setContentView(gameView)
     }

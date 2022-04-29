@@ -6,6 +6,7 @@ import android.graphics.*
 import android.hardware.SensorManager
 import android.util.Log
 import android.view.SurfaceView
+import cz.underthetree.meetmeattheball.MyApp
 import cz.underthetree.meetmeattheball.QuestionActivity
 import cz.underthetree.meetmeattheball.R
 import cz.underthetree.meetmeattheball.WalkingActivity
@@ -19,10 +20,10 @@ class GameView(
     val windowSizeY: Int
 ) : SurfaceView(context), Runnable {
 
-    private lateinit var sensorManager: SensorManager
     private lateinit var thread: Thread
     private var isPlaying = false
 
+    private var myApp: MyApp
     private val paint: Paint
 
     //TODO ačkoliv násobíme tímto, vypadá to že pohyb objektů není nezávislý na rozlišení obrazovky (možná je to frameratem?)
@@ -57,7 +58,7 @@ class GameView(
     private val drunknessLimit = .7f
     private var collectedTime = 0
 
-    private val maxCollectedTime = (9..12).random()
+    private var maxCollectedTime = 7
 
     private var characterArrived = false
     private var tableCollision = false
@@ -65,6 +66,11 @@ class GameView(
 
     //TODO přidat dva "stat bary" jeden na opilost a druhý na čas (velikostí se bude naplňovat
     init {
+
+        myApp = context as MyApp
+
+        maxCollectedTime = (myApp.minTimeObjects.. myApp.maxTimeObjects).random()
+
         paint = Paint()
 
         //Instantiate objects

@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cz.underthetree.meetmeattheball.utils.Accelerometer
 import cz.underthetree.meetmeattheball.utils.Gyroscope
@@ -28,9 +27,9 @@ class MainMenuActivity: AppCompatActivity() {
 
 
         myApp = applicationContext as MyApp
-        myApp.talkingCounter = 0
+        myApp.characterPhaseCounter = 0
 
-        Log.i("globalClass",myApp.talkingCounter.toString())
+        Log.i("globalClass",myApp.characterPhaseCounter.toString())
 
         val playBtn = findViewById(R.id.playBtn) as Button
         playBtn.findViewById<Button>(R.id.playBtn).setOnClickListener {
