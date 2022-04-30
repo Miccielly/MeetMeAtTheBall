@@ -21,4 +21,32 @@ What is your favourite alcohol?/
 What be specific on food you order in pizzeria?/
 What food you want to try?/
 Do you like sweet or salty food more?/
-What is your opinion on straws?
+What is your opinion on straws?/
+Do you like pubs or luxury restaurants more?/
+Do you look for quality or price when buying food?/
+Do you like experimenting with food?/
+Are you good at setting aesthetics of dining?/
+Do you like tasting food from different countries and cultures?/
+Do you find spicy food tasty?/
+Do you have your favourite fork, knife or spoon?/
+Do you use apron while you cook?/
+Do you sit at the table while eating?/
+How many times a day do you eat?/
+Do you think that breakfast is the most important dish of the day?/
+Do you eat sweet lunch from time to time?/
+What is the latest hour for you to have dinner?/
+Do you think it is good to talk while eating?/
+Do you like to use herbs in your dishes?/
+Do you recognize meat by its taste?/
+Are you trying to eat healthy food?/
+"Balanced diet" what do you imagine when you hear these words?/
+Do you use salt a lot?/
+Who would you pick to go with to your favourite restaurant?/
+Is there anything you don't eat?/
+Worst and best flavour of ice cream?/
+How do you feel about eating mushrooms?/
+Have you ever tried to make same food in different ways, which food was it?/
+Do you enjoy grocery shopping?/
+What is your favourite vending machine item?
+
+
