@@ -38,7 +38,7 @@ class MainMenuActivity: AppCompatActivity() {
 
         val howToBtn = findViewById(R.id.questionBtn) as Button
         howToBtn.findViewById<Button>(R.id.questionBtn).setOnClickListener{
-            showHowToPlay()
+            showOptions()
         }
 
         val quitBtn = findViewById(R.id.quitBtn) as Button
@@ -89,11 +89,10 @@ class MainMenuActivity: AppCompatActivity() {
 //        this.finish()
     }
 
-    private fun showHowToPlay()
+    private fun showOptions()
     {
-        val switchActivityIntent = Intent(this, QuestionActivity::class.java)
+        val switchActivityIntent = Intent(this, OptionsActivity::class.java)
         startActivity(switchActivityIntent)
-//        this.finish()
     }
 
     private fun quit()

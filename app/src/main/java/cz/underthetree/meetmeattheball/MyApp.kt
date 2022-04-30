@@ -7,7 +7,7 @@ class MyApp : Application() {
     var characterQuestionsCount = 3   //počet otázek na charakter
 
     var characterPhaseCounter = 0  //kolik už proběhlo fází tázání?
-    var characterPhaseCount = 3  //maximální počet hovorů
+    var characterPhaseCount = 1  //maximální počet hovorů
     var includeToilet = false   //připočítává mezi počet hovorů i záchod
 
     var maxTimeObjects = 12 //maximální počet objektů času
