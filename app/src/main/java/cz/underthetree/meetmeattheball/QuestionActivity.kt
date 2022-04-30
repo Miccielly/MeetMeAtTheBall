@@ -11,11 +11,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import cz.underthetree.meetmeattheball.game.Character
+import cz.underthetree.meetmeattheball.utils.ActivityLoader
 import cz.underthetree.meetmeattheball.utils.FileReader
 
 class QuestionActivity : AppCompatActivity() {
 
-    //TODO PŘEDĚLAT OBRÁZEK NEXT TLAČÍTKA
     private lateinit var myApp: MyApp
 
     private lateinit var textView: TextView
@@ -47,7 +47,7 @@ class QuestionActivity : AppCompatActivity() {
 
         Log.i("globalClass",myApp.characterPhaseCounter.toString())
 
-        //TODO nevytvářet vždy novou scénu jen změnit index charakteru na pozadí
+        //TODO nevytvářet vždy novou scénu jen změnit index charakteru na pozadí (udělat to v myApp a pro každý charakter, aby se neobjevovali v různých fázíh stejné otázky)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.question_activity0)
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -67,7 +67,7 @@ class QuestionActivity : AppCompatActivity() {
 
         val pauseMenuBtn = findViewById(R.id.pauseMenuBtn) as Button
         pauseMenuBtn.findViewById<Button>(R.id.pauseMenuBtn).setOnClickListener {
-            backToMenu()
+            this.finish()   //vracení zpět do menu
         }
 
         newQuestion()
@@ -82,10 +82,11 @@ class QuestionActivity : AppCompatActivity() {
             //pokud už jsme u maximálního počtu tázací fáze tak vypnout hru
             if(myApp.characterPhaseCounter >= myApp.characterPhaseCount)
             {
-                //TODO přidat obrazovku ukončení
-                this.finish()
+                showEnding()
                 return
             }
+
+            //Ukázat zase chodící hru
             startActivity(Intent(this, WalkingActivity::class.java))
             this.finish()   //jako mohli bychom to nechat otevřené, ale přepínat pak mezi už otevřenými aktivitami zatím neumím
             return
@@ -124,9 +125,9 @@ class QuestionActivity : AppCompatActivity() {
         return false    //nenašel se index se stejnou hodnotou mezi použitými
     }
 
-    private fun backToMenu() {
-//        val switchActivityIntent = Intent(this, MainMenuActivity::class.java)
-//        startActivity(switchActivityIntent)
+    private fun showEnding()
+    {
+        ActivityLoader().load(this, EndingActivity::class.java)
         this.finish()
     }
 

@@ -16,7 +16,7 @@ class WalkingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        windowManager.defaultDisplay.getMetrics(displayMetrics) //obsolete, ale nenašel jsem nějaké novější řešení co by fungovalo
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
@@ -24,8 +24,6 @@ class WalkingActivity : AppCompatActivity() {
 
         Log.i("height", height.toString())
         Log.i("width", width.toString())
-
-
 
         val context = applicationContext
         gameView = GameView(context, this, displaySize.x, displaySize.y)
@@ -42,6 +40,4 @@ class WalkingActivity : AppCompatActivity() {
         super.onResume()
         gameView.resume()
     }
-
-
 }

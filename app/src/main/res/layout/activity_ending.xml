@@ -11,27 +11,29 @@
       android:id="@+id/endingText"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="50dp"
+      android:layout_marginTop="150dp"
       android:text="Thank you for playing, hopefully this game made you know each other more"
       android:textAlignment="center"
       android:textColor="#263238"
       android:textSize="24sp"
-      app:layout_constraintBottom_toTopOf="@+id/button"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
   <Button
-      android:id="@+id/button"
+      android:id="@+id/endBtn"
       android:layout_width="99dp"
       android:layout_height="48dp"
-      android:layout_marginStart="316dp"
-      android:layout_marginEnd="316dp"
-      android:layout_marginBottom="40dp"
+      android:layout_marginStart="156dp"
+      android:layout_marginTop="55dp"
+      android:layout_marginEnd="156dp"
+      android:layout_marginBottom="50dp"
       android:background="@drawable/button_general"
-      android:text="Menu"
+      android:text="END"
       android:textColor="#FFFFFF"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/endingText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

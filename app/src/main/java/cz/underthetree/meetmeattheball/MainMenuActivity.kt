@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import cz.underthetree.meetmeattheball.utils.Accelerometer
+import cz.underthetree.meetmeattheball.utils.ActivityLoader
 import cz.underthetree.meetmeattheball.utils.Gyroscope
 import kotlin.system.exitProcess
 
@@ -25,7 +26,6 @@ class MainMenuActivity: AppCompatActivity() {
         setContentView(R.layout.mainmenu_activity)
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-
         myApp = applicationContext as MyApp
         myApp.characterPhaseCounter = 0
 
@@ -33,21 +33,18 @@ class MainMenuActivity: AppCompatActivity() {
 
         val playBtn = findViewById(R.id.playBtn) as Button
         playBtn.findViewById<Button>(R.id.playBtn).setOnClickListener {
-            play()
+            ActivityLoader().load(this, WalkingActivity::class.java)
         }
 
         val howToBtn = findViewById(R.id.questionBtn) as Button
         howToBtn.findViewById<Button>(R.id.questionBtn).setOnClickListener{
-            showOptions()
+            ActivityLoader().load(this, OptionsActivity::class.java)
         }
 
         val quitBtn = findViewById(R.id.quitBtn) as Button
         quitBtn.findViewById<Button>(R.id.quitBtn).setOnClickListener {
             quit()
         }
-
-
-
 
         //GYROSCOPE CODE
         gyroscope = Gyroscope(this)
@@ -79,22 +76,6 @@ class MainMenuActivity: AppCompatActivity() {
 
     }
 
-    //TODO calling activity přes jednu metodu s parametrem class?
-
-    private fun play()
-    {
-        //val switchActivityIntent = Intent(this, QuestionActivity::class.java)
-        val switchActivityIntent = Intent(this, WalkingActivity::class.java)
-        startActivity(switchActivityIntent)
-//        this.finish()
-    }
-
-    private fun showOptions()
-    {
-        val switchActivityIntent = Intent(this, OptionsActivity::class.java)
-        startActivity(switchActivityIntent)
-    }
-
     private fun quit()
     {
         this.finish()
@@ -112,5 +93,4 @@ class MainMenuActivity: AppCompatActivity() {
         gyroscope.unregister()
         accelerometer.unregister()
     }
-
 }

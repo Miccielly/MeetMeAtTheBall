@@ -62,14 +62,12 @@ class GameView(
 
     private var characterArrived = false
     private var tableCollision = false
-
-
-    //TODO přidat dva "stat bary" jeden na opilost a druhý na čas (velikostí se bude naplňovat
+    
     init {
 
         myApp = context as MyApp
 
-        maxCollectedTime = (myApp.minTimeObjects.. myApp.maxTimeObjects).random()
+        maxCollectedTime = (myApp.minTimeObjects..myApp.maxTimeObjects).random()
 
         paint = Paint()
 
@@ -98,7 +96,6 @@ class GameView(
             else -> charPicture = R.drawable.greendot
         }
 
-        //TODO udělat charakter nečtvercový, aby nebyl spláclý
         character = GameObject(
             Point(windowSizeX, windowSizeY),
             resources,
